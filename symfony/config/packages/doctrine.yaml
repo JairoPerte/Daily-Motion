@@ -18,13 +18,12 @@ doctrine:
       Doctrine\DBAL\Platforms\PostgreSQLPlatform: identity
     auto_mapping: true
     mappings:
-      # ejemplo:
-      # Poliza:
-      #           type: attribute
-      #           is_bundle: false
-      #           dir: '%kernel.project_dir%/src/Poliza/Infrastructure/Persistence'
-      #           prefix: 'App\Poliza\Infrastructure\Persistence'
-      #           alias: App\Poliza\Infrastructure\Persistence
+       Category:
+          type: attribute
+          is_bundle: false
+          dir: '%kernel.project_dir%/src/Category/Infrastructure/Persistence'
+          prefix: 'App\Category\Infrastructure\Persistence\Entity'
+          alias: App\Category\Infrastructure\Persistence\Entity
     controller_resolver:
       auto_mapping: false
 
