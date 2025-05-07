@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Category\Application\UseCase\CrateCategory;
+namespace App\Category\Application\UseCase\CreateCategory;
 
 class CreateCategoryCommand
 {

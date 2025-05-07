@@ -2,7 +2,7 @@
 
 namespace App\Category\Infrastructure\Controller\CreateCategory;
 
-class CreateCategoryDTO
+class CreateCategoryRequest
 {
     public function __construct(
         public readonly string $userId,

@@ -2,8 +2,8 @@
 
 namespace App\Category\Infrastructure\Controller\CreateCategory;
 
-use App\Category\Application\UseCase\CrateCategory\CreateCategoryCommand;
-use App\Category\Application\UseCase\CrateCategory\CreateCategoryHandler;
+use App\Category\Application\UseCase\CreateCategory\CreateCategoryCommand;
+use App\Category\Application\UseCase\CreateCategory\CreateCategoryHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
@@ -17,7 +17,7 @@ class CreateCategoryController extends AbstractController
 
     #[Route(path: '/api/category/create', name: 'api_category_create', methods: ['POST'])]
     public function index(
-        #[MapRequestPayload] CreateCategoryDTO $data
+        #[MapRequestPayload] CreateCategoryRequest $data
     ): JsonResponse {
         $command = new CreateCategoryCommand(
             userId: $data->userId,
@@ -27,6 +27,13 @@ class CreateCategoryController extends AbstractController
 
         $category = ($this->handler)($command);
 
-        return $this->json($category);
+        $response = new CreateCategoryResponse(
+            id: $category->getId()->getUuid(),
+            userId: $category->getUserId()->getUuid(),
+            iconNumber: $category->getIconNumber()->getIconNumber(),
+            name: $category->getName()->getName()
+        );
+
+        return $this->json($response);
     }
 }

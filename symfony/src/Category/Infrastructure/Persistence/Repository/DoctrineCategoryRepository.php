@@ -42,14 +42,14 @@ class DoctrineCategoryRepository implements CategoryRepositoryInterface
 
     public function save(Category $category): void
     {
-        $doctrineCategory = $this->em->getRepository(DoctrineCategory::class)->find($category->getId());
+        $doctrineCategory = $this->em->getRepository(DoctrineCategory::class)->find($category->getId()->getUuid());
         $this->em->persist($this->mapper->toInfrastructure($category, $doctrineCategory));
         $this->em->flush();
     }
 
     public function delete(Category $category): void
     {
-        $doctrineCategory = $this->em->getRepository(DoctrineCategory::class)->find($category->getId());
+        $doctrineCategory = $this->em->getRepository(DoctrineCategory::class)->find($category->getId()->getUuid());
         $this->em->remove($doctrineCategory);
         $this->em->flush();
     }
