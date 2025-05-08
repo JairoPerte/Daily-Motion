@@ -15,14 +15,14 @@ class CreateCategoryController extends AbstractController
         private CreateCategoryHandler $handler
     ) {}
 
-    #[Route(path: '/api/category/create', name: 'api_category_create', methods: ['POST'])]
+    #[Route(path: '/api/category', name: 'api_category_create', methods: ['POST'])]
     public function index(
-        #[MapRequestPayload] CreateCategoryRequest $data
+        #[MapRequestPayload] CreateCategoryRequest $request
     ): JsonResponse {
         $command = new CreateCategoryCommand(
-            userId: $data->userId,
-            iconNumber: $data->iconNumber,
-            name: $data->name
+            userId: $request->userId,
+            iconNumber: $request->iconNumber,
+            name: $request->name
         );
 
         $category = ($this->handler)($command);

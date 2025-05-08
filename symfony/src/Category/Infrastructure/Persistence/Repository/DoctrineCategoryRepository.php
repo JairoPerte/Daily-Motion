@@ -8,15 +8,13 @@ use App\Category\Domain\ValueObject\CategoryId;
 use App\Category\Domain\Criteria\CategoryCriteria;
 use App\Category\Domain\Repository\CategoryRepositoryInterface;
 use App\Category\Infrastructure\Persistence\Entity\DoctrineCategory;
-use App\Category\Infrastructure\Persistence\Mapper\CategoryCriteriaMapper;
 use App\Category\Infrastructure\Persistence\Mapper\CategoryMapper;
 
 class DoctrineCategoryRepository implements CategoryRepositoryInterface
 {
     public function __construct(
         private EntityManagerInterface $em,
-        private CategoryMapper $mapper,
-        private CategoryCriteriaMapper $criteriaMapper
+        private CategoryMapper $mapper
     ) {}
 
     public function findById(CategoryId $id): ?Category
@@ -28,12 +26,36 @@ class DoctrineCategoryRepository implements CategoryRepositoryInterface
         return $this->mapper->toDomain($doctrineCategory);
     }
 
-    public function findByCriteria(CategoryCriteria $criteria): ?array
+    public function findByCriteriaPaginated(CategoryCriteria $criteria): ?array
     {
-        $doctrineCategories = $this->em->getRepository(DoctrineCategory::class)->findBy($this->criteriaMapper->toArray($criteria));
+        if ($criteria->page <= 0) {
+            return null;
+        }
+
+        $qb = $this->em->createQueryBuilder();
+        $qb->select('c')
+            ->from(DoctrineCategory::class, 'c')
+            ->orderBy('c.iconNumber', 'ASC')
+            ->addOrderBy('c.name', 'ASC')
+            ->setFirstResult(($criteria->page - 1) * 10)
+            ->setMaxResults(10);
+
+        if ($criteria->name) {
+            $qb->andWhere('c.name LIKE :name')
+                ->setParameter('name', ('%' . $criteria->name . '%'));
+        }
+
+        if ($criteria->iconNumber) {
+            $qb->andWhere('c.iconNumber = :iconNumber')
+                ->setParameter('iconNumber', $criteria->iconNumber);
+        }
+
+        $doctrineCategories = $qb->getQuery()->getResult();
+
         if (!$doctrineCategories) {
             return null;
         }
+
         return array_map(
             callback: fn(DoctrineCategory $doctrineCategory) => $this->mapper->toDomain($doctrineCategory),
             array: $doctrineCategories
@@ -50,7 +72,9 @@ class DoctrineCategoryRepository implements CategoryRepositoryInterface
     public function delete(Category $category): void
     {
         $doctrineCategory = $this->em->getRepository(DoctrineCategory::class)->find($category->getId()->getUuid());
-        $this->em->remove($doctrineCategory);
-        $this->em->flush();
+        if ($doctrineCategory) {
+            $this->em->remove($doctrineCategory);
+            $this->em->flush();
+        }
     }
 }

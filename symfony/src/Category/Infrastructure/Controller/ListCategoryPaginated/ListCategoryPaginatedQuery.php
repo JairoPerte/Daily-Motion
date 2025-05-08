@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Category\Domain\Criteria;
+namespace App\Category\Infrastructure\Controller\ListCategoryPaginated;
 
-class CategoryCriteria
+class ListCategoryPaginatedQuery
 {
     public function __construct(
         public readonly ?int $iconNumber,

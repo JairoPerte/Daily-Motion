@@ -10,12 +10,12 @@ interface CategoryRepositoryInterface
 {
     public function save(Category $category): void;
 
-    public function delete(Category $id): void;
+    public function delete(Category $category): void;
 
     public function findById(CategoryId $id): ?Category;
 
     /**
      * @return Category[]
      */
-    public function findByCriteria(CategoryCriteria $criteria): ?array;
+    public function findByCriteriaPaginated(CategoryCriteria $criteria): ?array;
 }
