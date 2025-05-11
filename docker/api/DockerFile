@@ -1,0 +1,25 @@
+FROM php:8.2-fpm
+
+# Establecer directorio de trabajo
+WORKDIR /var/www/html
+
+# Instalar dependencias del sistema necesarias
+RUN apt-get update && apt-get install -y \
+    git \
+    unzip \
+    libpq-dev \
+    libzip-dev \
+    zip \
+    && docker-php-ext-install pdo pdo_pgsql zip
+
+# Instalar Composer (última versión estable directamente desde la fuente oficial)
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+
+# Copiar el código fuente Symfony
+COPY ./symfony ./
+
+# Instalar dependencias PHP
+RUN composer install --no-dev --optimize-autoloader --no-interaction
+
+# Dar permisos correctos
+RUN mkdir -p var/cache var/log && chown -R www-data:www-data var
