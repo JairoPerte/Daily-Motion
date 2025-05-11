@@ -24,6 +24,24 @@ doctrine:
           dir: '%kernel.project_dir%/src/Category/Infrastructure/Persistence'
           prefix: 'App\Category\Infrastructure\Persistence\Entity'
           alias: App\Category\Infrastructure\Persistence\Entity
+       Session:
+          type: attribute
+          is_bundle: false
+          dir: '%kernel.project_dir%/src/Authentication/Infrastructure/Persistence'
+          prefix: 'App\Authentication\Infrastructure\Persistence\Entity'
+          alias: App\Authentication\Infrastructure\Persistence\Entity
+       Activity:
+          type: attribute
+          is_bundle: false
+          dir: '%kernel.project_dir%/src/Activity/Infrastructure/Persistence'
+          prefix: 'App\Activity\Infrastructure\Persistence\Entity'
+          alias: App\Activity\Infrastructure\Persistence\Entity
+       User:
+          type: attribute
+          is_bundle: false
+          dir: '%kernel.project_dir%/src/User/Infrastructure/Persistence'
+          prefix: 'App\User\Infrastructure\Persistence\Entity'
+          alias: App\User\Infrastructure\Persistence\Entity
     controller_resolver:
       auto_mapping: false
 

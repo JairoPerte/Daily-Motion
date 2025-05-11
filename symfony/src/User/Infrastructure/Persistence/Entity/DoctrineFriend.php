@@ -23,5 +23,5 @@ class DoctrineFriend
     public bool $pending;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, name: "accepted_at")]
-    public DateTimeImmutable $acceptedAt;
+    public ?DateTimeImmutable $acceptedAt;
 }
