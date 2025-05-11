@@ -6,6 +6,7 @@ use App\Category\Application\UseCase\CreateCategory\CreateCategoryCommand;
 use App\Category\Application\UseCase\CreateCategory\CreateCategoryHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
 

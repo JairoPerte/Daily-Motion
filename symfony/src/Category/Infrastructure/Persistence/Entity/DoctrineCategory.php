@@ -10,10 +10,10 @@ use Doctrine\ORM\Mapping as ORM;
 class DoctrineCategory
 {
     #[ORM\Id]
-    #[ORM\Column(name: 'id')]
+    #[ORM\Column(name: 'id', type: Types::STRING)]
     public string $id;
 
-    #[ORM\Column(name: 'user_id')]
+    #[ORM\Column(name: 'user_id', type: Types::STRING)]
     public string $userId;
 
     #[ORM\Column(name: 'icon', type: Types::INTEGER)]
