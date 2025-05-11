@@ -11,6 +11,6 @@ class BrowserContext
 
     public function getUserAgent(): string
     {
-        return $this->requestStack->getCurrentRequest()->attributes->get("User-Agent");
+        return $this->requestStack->getCurrentRequest()->headers->get("User-Agent");
     }
 }
