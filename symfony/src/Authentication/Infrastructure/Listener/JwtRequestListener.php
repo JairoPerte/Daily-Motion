@@ -25,7 +25,7 @@ class JwtRequestListener
 
         $path = $request->getPathInfo();
 
-        if (preg_match('#^/api/(login|register)#', $path)) {
+        if (preg_match('#^/api/auth/(login|register)#', $path)) {
             return;
         }
         if (!str_starts_with($path, '/api/')) {
