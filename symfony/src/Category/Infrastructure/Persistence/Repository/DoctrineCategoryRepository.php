@@ -37,6 +37,8 @@ class DoctrineCategoryRepository implements CategoryRepositoryInterface
             ->from(DoctrineCategory::class, 'c')
             ->orderBy('c.iconNumber', 'ASC')
             ->addOrderBy('c.name', 'ASC')
+            ->andWhere('c.userId = :userId')
+            ->setParameter('userId', $criteria->userId)
             ->setFirstResult(($criteria->page - 1) * 10)
             ->setMaxResults(10);
 

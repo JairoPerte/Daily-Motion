@@ -2,6 +2,7 @@
 
 namespace App\Category\Infrastructure\Controller\DeleteCategory;
 
+use App\Authentication\Infrastructure\Context\AuthContext;
 use App\Category\Application\UseCase\CreateCategory\CreateCategoryHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -10,7 +11,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class DeleteCategoryController extends AbstractController
 {
     public function __construct(
-        private CreateCategoryHandler $handler
+        private CreateCategoryHandler $handler,
+        private AuthContext $authContext
     ) {}
 
     #[Route(path: "/api/category/{id}", name: "api_category_delete", methods: ["DELETE"])]

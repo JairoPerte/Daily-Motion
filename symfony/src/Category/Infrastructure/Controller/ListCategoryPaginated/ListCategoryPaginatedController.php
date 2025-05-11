@@ -2,6 +2,7 @@
 
 namespace App\Category\Infrastructure\Controller\ListCategoryPaginated;
 
+use App\Authentication\Infrastructure\Context\AuthContext;
 use App\Category\Application\UseCase\ListCategoryPaginated\ListCategoryPaginatedCommand;
 use App\Category\Application\UseCase\ListCategoryPaginated\ListCategoryPaginatedHandler;
 use App\Category\Domain\Entity\Category;
@@ -13,7 +14,8 @@ use Symfony\Component\Routing\Annotation\Route;
 class ListCategoryPaginatedController extends AbstractController
 {
     public function __construct(
-        private ListCategoryPaginatedHandler $handler
+        private ListCategoryPaginatedHandler $handler,
+        private AuthContext $authContext
     ) {}
 
     #[Route(path: "/api/category", name: "api_category_listPaginated", methods: ["GET"])]
@@ -23,19 +25,19 @@ class ListCategoryPaginatedController extends AbstractController
         $command = new ListCategoryPaginatedCommand(
             iconNumber: $query->iconNumber,
             name: $query->name,
-            page: $query->page
+            page: $query->page,
+            userId: $this->authContext->getUser()->getId()->getUuid()
         );
 
         $categories = ($this->handler)($command);
 
         if ($categories) {
             $response = array_map(
-                fn(Category $category) =>
+                fn(Category $category): ListCategoryPaginatedResponse =>
                 new ListCategoryPaginatedResponse(
-                    $category->getId()->getUuid(),
-                    $category->getUserId()->getUuid(),
-                    $category->getIconNumber()->getIconNumber(),
-                    $category->getName()->getName()
+                    id: $category->getId()->getUuid(),
+                    iconNumber: $category->getUserId()->getUuid(),
+                    name: $category->getIconNumber()->getIconNumber(),
                 ),
                 $categories
             );

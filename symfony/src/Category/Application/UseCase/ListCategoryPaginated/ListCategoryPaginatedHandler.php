@@ -25,7 +25,8 @@ class ListCategoryPaginatedHandler
         return new CategoryCriteria(
             iconNumber: $command->iconNumber,
             name: $command->name,
-            page: $command->page
+            page: $command->page,
+            userId: $command->userId
         );
     }
 }
