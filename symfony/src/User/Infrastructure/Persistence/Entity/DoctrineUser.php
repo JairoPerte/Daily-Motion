@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
 
 #[ORM\Entity()]
-#[ORM\Table(name: "user")]
+#[ORM\Table(name: '"user"')]
 class DoctrineUser
 {
     #[ORM\Id]
@@ -30,7 +30,7 @@ class DoctrineUser
     public bool $emailVerified;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, name: "email_verified_at")]
-    public DateTimeImmutable $emailVerifiedAt;
+    public ?DateTimeImmutable $emailVerifiedAt;
 
     #[ORM\Column(type: Types::STRING, name: "img")]
     public string $img;

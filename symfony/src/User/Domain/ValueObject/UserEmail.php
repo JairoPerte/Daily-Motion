@@ -19,8 +19,9 @@ class UserEmail
             throw new InvalidArgumentException("Email mal formateado");
         }
 
-        if (strlen($email) != 4) {
-            throw new InvalidArgumentException("El Código de email debe de tener 4 caracteres");
+        if (strlen($emailCode) != 4) {
+            dump($email);
+            throw new InvalidArgumentException("Email mal formateado");
         }
 
         if ($this->verified && $this->verifiedAt === null) {
@@ -41,7 +42,7 @@ class UserEmail
     private static function generateCode(): string
     {
         return str_pad(
-            rand(1000, 9999),
+            rand(1, 9999),
             4,
             '0',
             STR_PAD_LEFT
@@ -89,7 +90,7 @@ class UserEmail
         return $this->verified;
     }
 
-    public function getVerifiedAt(): DateTimeImmutable
+    public function getVerifiedAt(): ?DateTimeImmutable
     {
         return $this->verifiedAt;
     }

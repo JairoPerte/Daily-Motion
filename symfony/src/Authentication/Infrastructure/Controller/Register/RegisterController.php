@@ -38,16 +38,12 @@ class RegisterController extends AbstractController
             userAgent: $userAgent
         );
 
-        try {
-            $jwt = ($this->handler)($command);
+        $jwt = ($this->handler)($command);
 
-            $response = new JsonResponse(['message' => 'Registrado correctamente']);
+        $response = new JsonResponse(['message' => 'Registrado correctamente']);
 
-            $this->authCookieManager->setTokenCookie($response, $jwt);
+        $this->authCookieManager->setTokenCookie($response, $jwt);
 
-            return $response;
-        } catch (Throwable $e) {
-            return $this->json(["message" => "Ha habido un error, intenalo más tarde"], 500);
-        }
+        return $response;
     }
 }
