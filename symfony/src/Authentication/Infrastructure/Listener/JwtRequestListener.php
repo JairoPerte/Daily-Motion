@@ -2,6 +2,7 @@
 
 namespace App\Authentication\Infrastructure\Listener;
 
+use App\Authentication\Domain\Exception\SessionNotValidException;
 use Throwable;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
@@ -35,10 +36,7 @@ class JwtRequestListener
         $jwt = $request->cookies->get('token');
 
         if (!$jwt) {
-            $response = new JsonResponse(['error' => 'Missing token'], 401);
-            $this->authCookieManager->clearTokenCookie($response);
-            $event->setResponse($response);
-            return;
+            throw new SessionNotValidException("Missing Json Web Token");
         }
 
         try {
