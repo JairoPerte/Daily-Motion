@@ -2,11 +2,15 @@
 
 namespace App\Shared\Domain\Exception;
 
-abstract class NotFoundException extends DailyMotionException
+use Exception;
+
+class DailyMotionException extends Exception
 {
+    public readonly int $httpCode;
+
     public function __construct(string $message)
     {
         parent::__construct($message);
-        $this->httpCode = 404;
+        $this->httpCode = 500;
     }
 }
