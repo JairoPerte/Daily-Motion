@@ -57,7 +57,7 @@ class DoctrineUserRepository implements UserRepositoryInterface
             ->getRepository(DoctrineUser::class)
             ->createQueryBuilder('u')
             ->select('u.usertag', 'u.name', 'u.img')
-            ->addSelect('(SELECT COUNT(*) FROM friend AS f WHERE f.senderId=u.id OR f.receiverId=u.id) AS friends')
+            ->addSelect('(SELECT COUNT(*) FROM friend AS f WHERE (f.senderId=u.id OR f.receiverId=u.id) AND f.pending=false) AS friends')
             ->where('u.usertag LIKE :usertag')
             ->setParameter(":usertag", '%' . $search . '%')
             ->orWhere('u.name LIKE :name')
