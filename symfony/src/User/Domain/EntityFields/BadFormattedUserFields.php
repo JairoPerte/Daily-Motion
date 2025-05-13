@@ -2,7 +2,7 @@
 
 namespace App\User\Domain\EntityFields;
 
-class BadFormatedUserFields
+class BadFormattedUserFields
 {
     public function __construct(
         public readonly bool $name,
