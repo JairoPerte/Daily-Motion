@@ -42,20 +42,14 @@ class JwtRequestListener
         try {
             $payload = $this->tokenManager->decodeToken($jwt);
         } catch (Throwable $e) {
-            $response = new JsonResponse(['error' => 'Invalid token'], 401);
-            $this->authCookieManager->clearTokenCookie($response);
-            $event->setResponse($response);
-            return;
+            throw new SessionNotValidException("Invalid Token");
         }
 
         $userId = $payload['sub'] ?? null;
         $sessionId = $payload['session_id'] ?? null;
 
         if (!$userId || !$sessionId) {
-            $response = new JsonResponse(['error' => 'Malformed token'], 401);
-            $this->authCookieManager->clearTokenCookie($response);
-            $event->setResponse($response);
-            return;
+            throw new SessionNotValidException("Malformed Token");
         }
 
         $session = $this->sessionRepository->findById($sessionId);
@@ -74,6 +68,7 @@ class JwtRequestListener
             return;
         }
         if (!$user->getEmail()->isVerified()) {
+            //No se limpia la cookie
             $response = new JsonResponse(['error' => 'User not valid'], 401);
             $event->setResponse($response);
             return;
