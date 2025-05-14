@@ -3,6 +3,7 @@
 namespace App\Category\Application\UseCase\ListCategoryPaginated;
 
 use App\Category\Domain\Criteria\CategoryCriteria;
+use App\Category\Domain\Criteria\CategoryLimitPerRoutes;
 use App\Category\Domain\Entity\Category;
 use App\Category\Domain\Repository\CategoryRepositoryInterface;
 
@@ -26,6 +27,7 @@ class ListCategoryPaginatedHandler
             iconNumber: $command->iconNumber,
             name: $command->name,
             page: $command->page,
+            limit: CategoryLimitPerRoutes::PRINCIPAL_LIST_CATEGORIES->value,
             userId: $command->userId
         );
     }

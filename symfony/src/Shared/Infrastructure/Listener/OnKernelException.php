@@ -2,21 +2,44 @@
 
 namespace App\Shared\Infrastructure\Listener;
 
-use App\Authentication\Domain\Exception\SessionNotValidException;
+use App\Authentication\Domain\Exception\JwtNotValidException;
+use Throwable;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
-use Throwable;
+use App\Authentication\Infrastructure\Security\AuthCookieManager;
 
 class OnKernelException
 {
-    public function __construct() {}
+    public function __construct(
+        private AuthCookieManager $authCookieManager
+    ) {}
 
     public function onKernelException(ExceptionEvent $exception): void
     {
-        $exception->setResponse(new JsonResponse(
-            ["message" => $exception->getThrowable()->getMessage()],
-            $this->getCode($exception->getThrowable())
-        ));
+        $throwable = $exception->getThrowable();
+
+        // Forma del mensaje de error:
+        $data = [];
+        $data["error"] = end(explode('\\', get_class($throwable)));
+        $data["message"] = $throwable->getMessage();
+
+        $fields = $this->getFields($throwable);
+        if ($fields) {
+            $data["fields"] = $fields;
+        }
+
+        // Respuesta
+        $response = new JsonResponse(
+            $data,
+            $this->getCode($throwable)
+        );
+
+        // Extra que se quiera hacer con las respuestas
+        if ($throwable instanceof JwtNotValidException) {
+            $this->authCookieManager->clearTokenCookie($exception->getResponse());
+        }
+
+        $exception->setResponse($response);
     }
 
     private function getCode(Throwable $exception): int
@@ -24,9 +47,14 @@ class OnKernelException
         if ($exception->httpCode) {
             return $exception->httpCode;
         }
-        if ($exception instanceof SessionNotValidException) {
-            return 401;
-        }
         return 500;
+    }
+
+    private function getFields(Throwable $exception): ?array
+    {
+        if (method_exists($exception, 'getFieldsToResponse')) {
+            return $exception->getFieldsToResponse();
+        }
+        return null;
     }
 }

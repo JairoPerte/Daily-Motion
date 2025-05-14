@@ -10,11 +10,10 @@ class CategoryIconNumber
         private readonly int $iconNumber
     ) {
         if ($iconNumber <= 0) {
-            throw new CategoryIconNotExistException("No existe ese icono");
         }
     }
 
-    public function getIconNumber(): int
+    public function getInteger(): int
     {
         return $this->iconNumber;
     }

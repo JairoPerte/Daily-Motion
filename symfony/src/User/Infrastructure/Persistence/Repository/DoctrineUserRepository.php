@@ -3,7 +3,11 @@
 namespace App\User\Infrastructure\Persistence\Repository;
 
 use App\User\Domain\Entity\User;
+use App\User\Domain\EntityFields\ExistingUserFields;
+use App\User\Domain\Exception\ExistingUserException;
+use App\User\Domain\Exception\UserNotFoundException;
 use App\User\Domain\Repository\UserRepositoryInterface;
+use App\User\Domain\ValueObject\UserEmail;
 use App\User\Domain\ValueObject\UserId;
 use App\User\Domain\ValueObject\UserTag;
 use App\User\Infrastructure\Persistence\Entity\DoctrineUser;
@@ -24,35 +28,62 @@ class DoctrineUserRepository implements UserRepositoryInterface
         $this->em->flush();
     }
 
+    /**
+     * @throws \App\User\Domain\Exception\UserNotFoundException
+     */
     public function delete(User $user): void
     {
         $doctrineUser = $this->em->getRepository(DoctrineUser::class)->find($user->getId()->getUuid());
         if ($doctrineUser) {
             $this->em->remove($doctrineUser);
             $this->em->flush();
+        } else {
+            throw new UserNotFoundException();
         }
     }
 
-    public function findById(UserId $userId): ?User
+    /**
+     * @throws \App\User\Domain\Exception\UserNotFoundException
+     */
+    public function findById(UserId $userId): User
     {
         $doctrineUser = $this->em->getRepository(DoctrineUser::class)->find($userId->getUuid());
         if ($doctrineUser) {
             return $this->mapper->toDomain($doctrineUser);
         }
-        return null;
+        throw new UserNotFoundException();
     }
 
-    public function findByUsertag(UserTag $userTag): ?User
+    /**
+     * @throws \App\User\Domain\Exception\UserNotFoundException
+     */
+    public function findByUsertag(UserTag $userTag): User
     {
         $doctrineUser = $this->em->getRepository(DoctrineUser::class)->findOneBy(["usertag" => $userTag->getString()]);
         if ($doctrineUser) {
             return $this->mapper->toDomain($doctrineUser);
         }
-        return null;
+        throw new UserNotFoundException();
     }
 
-    public function findUsersBySearch(string $search, int $limit, int $page): ?array
+    /**
+     * @throws \App\User\Domain\Exception\UserNotFoundException
+     */
+    public function findByEmail(string $email): User
     {
+        $doctrineUser = $this->em->getRepository(DoctrineUser::class)->findOneBy(["email" => $email]);
+        if ($doctrineUser) {
+            return $this->mapper->toDomain($doctrineUser);
+        }
+        throw new UserNotFoundException();
+    }
+
+    /**
+     * @throws \App\User\Domain\Exception\UserNotFoundException
+     */
+    public function findUsersBySearch(string $search, int $limit, int $page): array
+    {
+        // PASAR ESTOS DATOS A CRITERIA Y HACER UN USERLIMITPERROUTES
         $doctrineUsersSearched = $this->em
             ->getRepository(DoctrineUser::class)
             ->createQueryBuilder('u')
@@ -64,19 +95,41 @@ class DoctrineUserRepository implements UserRepositoryInterface
             ->setParameter(":name", '%' . $search . '%')
             ->orderBy('friends', 'DESC')
             ->setMaxResults($limit)
-            ->setFirstResult($page * $limit)
+            ->setFirstResult(($page - 1) * $limit)
             ->getQuery()
             ->getResult();
         //TENER QUE HACER UN USER PUBLIC ÚNICAMENTE CON LOS VALORES PERMITIDOS ÚNICAMTE
         return $doctrineUsersSearched;
     }
 
-    public function findByEmail(string $email): ?User
+    /**
+     * @throws \App\User\Domain\Exception\ExistingUserException
+     */
+    public function findUsertagEmailExists(string $email, string $usertag): void
     {
-        $doctrineUser = $this->em->getRepository(DoctrineUser::class)->findOneBy(["email" => $email]);
-        if ($doctrineUser) {
-            return $this->mapper->toDomain($doctrineUser);
+        $doctrineUsers = $this->em->getRepository(DoctrineUser::class)
+            ->createQueryBuilder("u")
+            ->select("u.usertag", "u.email")
+            ->where("u.email = :email")
+            ->setParameter(":email", $email)
+            ->orWhere("u.usertag = :usertag")
+            ->setParameter(":usertag", $usertag)
+            ->getQuery()->getResult();
+
+        if ($doctrineUsers) {
+            $repetidos = [];
+            foreach ($doctrineUsers as $doctrineUser) {
+                if ($doctrineUser->usertag == $usertag) {
+                    $repetidos["usertag"] = $usertag;
+                }
+                if ($doctrineUser->email == $email) {
+                    $repetidos["email"] = $email;
+                }
+            }
+            throw new ExistingUserException(new ExistingUserFields(
+                $repetidos["usertag"] ? true : false,
+                $repetidos["email"] ? true : false
+            ));
         }
-        return null;
     }
 }

@@ -8,7 +8,7 @@ class CategoryName
         private readonly string $name
     ) {}
 
-    public function getName(): string
+    public function getString(): string
     {
         return $this->name;
     }

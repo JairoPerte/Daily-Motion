@@ -1,15 +1,14 @@
 <?php
 
-namespace App\Authentication\Domain\Exception;
+namespace App\Shared\Domain\Exception;
 
 use App\Shared\Domain\Exception\DailyMotionException;
-use Exception;
 
-class SessionNotValidException extends DailyMotionException
+class LogicDailyMotionException extends DailyMotionException
 {
     public function __construct(string $message)
     {
         parent::__construct($message);
-        $this->httpCode = 401;
+        $this->httpCode = 500;
     }
 }

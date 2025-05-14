@@ -21,14 +21,13 @@ class LogOutController  extends AbstractController
     #[Route(path: "/api/auth/logout", name: "api_auth_logout", methods: ["DELETE"])]
     public function index(): JsonResponse
     {
-        $session = $this->authContext->getSession();
         $command = new  LogOutCommand(
-            session: $session
+            sessionId: $this->authContext->getSessionId()
         );
 
         ($this->handler)($command);
 
-        $response = $this->json(["message" => "Sesión cerrada correctamente"], 200);
+        $response = $this->json(["message" => "Session has been successfully logout"], 200);
         $this->cookieManager->clearTokenCookie($response);
         return $response;
     }

@@ -22,20 +22,13 @@ class VerifyEmailController extends AbstractController
     public function index(
         string $code
     ): JsonResponse {
-        $user = $this->authContext->getUser();
-
         $command = new VerifyEmailCommand(
             code: $code,
-            user: $user
+            userId: $this->authContext->getUserId()
         );
 
-        try {
-            ($this->handler)($command);
-            $response = new JsonResponse(["message" => "El código es correcto."], 200);
-        } catch (EmailCodeNotValidException $e) {
-            $response = new JsonResponse(["message" => $e->getMessage()], 400);
-        } finally {
-            return $response;
-        }
+        ($this->handler)($command);
+
+        return $this->json(["message" => "Email code is correct"], 200);
     }
 }

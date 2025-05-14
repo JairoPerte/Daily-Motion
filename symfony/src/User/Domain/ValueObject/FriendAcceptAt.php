@@ -15,7 +15,7 @@ class FriendAcceptAt
         return new self(new DateTimeImmutable());
     }
 
-    public function getAcceptAt(): DateTimeImmutable
+    public function getDateTimeImmutable(): DateTimeImmutable
     {
         return $this->acceptAt;
     }

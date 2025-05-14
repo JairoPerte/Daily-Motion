@@ -51,11 +51,12 @@ final class Version20250511203709 extends AbstractMigration
         // FRIEND
         $this->addSql(<<<'SQL'
             CREATE TABLE friend (
+                id UUID NOT NULL
                 sender_id UUID NOT NULL, 
                 receiver_id UUID NOT NULL, 
                 pending BOOLEAN NOT NULL, 
                 accepted_at TIMESTAMP(0) WITH TIME ZONE NULL, 
-                PRIMARY KEY(sender_id, receiver_id),
+                PRIMARY KEY(id),
                 CONSTRAINT fk_friend_sender FOREIGN KEY (sender_id) REFERENCES "user"(id) ON DELETE CASCADE,
                 CONSTRAINT fk_friend_receiver FOREIGN KEY (receiver_id) REFERENCES "user"(id) ON DELETE CASCADE
             )

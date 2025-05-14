@@ -3,6 +3,7 @@
 namespace App\Category\Infrastructure\Persistence\Repository;
 
 use App\Category\Domain\Entity\Category;
+use App\Category\Domain\Exception\CategoryNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Category\Domain\ValueObject\CategoryId;
 use App\Category\Domain\Criteria\CategoryCriteria;
@@ -17,19 +18,22 @@ class DoctrineCategoryRepository implements CategoryRepositoryInterface
         private CategoryMapper $mapper
     ) {}
 
-    public function findById(CategoryId $id): ?Category
+    /**
+     * @throws \App\Category\Domain\Exception\CategoryNotFoundException
+     */
+    public function findById(CategoryId $id): Category
     {
         $doctrineCategory = $this->em->getRepository(DoctrineCategory::class)->find($id->getUuid());
-        if (!$doctrineCategory) {
-            return null;
+        if ($doctrineCategory) {
+            return $this->mapper->toDomain($doctrineCategory);
         }
-        return $this->mapper->toDomain($doctrineCategory);
+        throw new CategoryNotFoundException();
     }
 
-    public function findByCriteriaPaginated(CategoryCriteria $criteria): ?array
+    public function findByCriteriaPaginated(CategoryCriteria $criteria): array
     {
         if ($criteria->page <= 0) {
-            return null;
+            return [];
         }
 
         $qb = $this->em->createQueryBuilder();
@@ -39,8 +43,8 @@ class DoctrineCategoryRepository implements CategoryRepositoryInterface
             ->addOrderBy('c.name', 'ASC')
             ->andWhere('c.userId = :userId')
             ->setParameter('userId', $criteria->userId)
-            ->setFirstResult(($criteria->page - 1) * 10)
-            ->setMaxResults(10);
+            ->setFirstResult(($criteria->page - 1) * $criteria->limit)
+            ->setMaxResults($criteria->limit);
 
         if ($criteria->name) {
             $qb->andWhere('c.name LIKE :name')
@@ -55,7 +59,7 @@ class DoctrineCategoryRepository implements CategoryRepositoryInterface
         $doctrineCategories = $qb->getQuery()->getResult();
 
         if (!$doctrineCategories) {
-            return null;
+            return [];
         }
 
         return array_map(
@@ -71,12 +75,17 @@ class DoctrineCategoryRepository implements CategoryRepositoryInterface
         $this->em->flush();
     }
 
+    /**
+     * @throws \App\Category\Domain\Exception\CategoryNotFoundException
+     */
     public function delete(Category $category): void
     {
         $doctrineCategory = $this->em->getRepository(DoctrineCategory::class)->find($category->getId()->getUuid());
         if ($doctrineCategory) {
             $this->em->remove($doctrineCategory);
             $this->em->flush();
+        } else {
+            throw new CategoryNotFoundException();
         }
     }
 }

@@ -30,16 +30,10 @@ class LogInController extends AbstractController
             userAgent: $this->browserContext->getUserAgent()
         );
 
-        try {
-            $jwt = ($this->handler)($command);
+        $jwt = ($this->handler)($command);
 
-            $response = new JsonResponse(['message' => 'Registrado correctamente']);
-
-            $this->authCookieManager->setTokenCookie($response, $jwt);
-
-            return $response;
-        } catch (Throwable $e) {
-            return $this->json(["message" => "Ha habido un error, intenalo más tarde"], 500);
-        }
+        $response = new JsonResponse(['message' => 'User has been successfully login'], 201);
+        $this->authCookieManager->setTokenCookie($response, $jwt);
+        return $response;
     }
 }

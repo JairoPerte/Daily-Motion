@@ -8,6 +8,7 @@ class CategoryCriteria
         public readonly ?int $iconNumber,
         public readonly ?string $name,
         public readonly int $page,
+        public readonly int $limit,
         public readonly string $userId
     ) {}
 }

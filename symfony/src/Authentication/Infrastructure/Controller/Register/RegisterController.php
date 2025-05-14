@@ -2,8 +2,6 @@
 
 namespace App\Authentication\Infrastructure\Controller\Register;
 
-use Exception;
-use Symfony\Component\HttpFoundation\Cookie;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
@@ -12,8 +10,6 @@ use App\Authentication\Application\UseCase\Register\RegisterCommand;
 use App\Authentication\Application\UseCase\Register\RegisterHandler;
 use App\Authentication\Infrastructure\Context\BrowserContext;
 use App\Authentication\Infrastructure\Security\AuthCookieManager;
-use Symfony\Component\HttpFoundation\Request;
-use Throwable;
 
 class RegisterController extends AbstractController
 {
@@ -33,14 +29,13 @@ class RegisterController extends AbstractController
             name: $request->name,
             usertag: $request->usertag,
             password: $request->password,
-            confirmPassword: $request->confirmPassword,
             email: $request->email,
             userAgent: $userAgent
         );
 
         $jwt = ($this->handler)($command);
 
-        $response = new JsonResponse(['message' => 'Registrado correctamente']);
+        $response = new JsonResponse(['message' => 'User has successfully complete the registration'], 201);
 
         $this->authCookieManager->setTokenCookie($response, $jwt);
 

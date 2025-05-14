@@ -2,6 +2,8 @@
 
 namespace App\User\Domain\Entity;
 
+use App\User\Domain\EntityFields\BadFormatedUserFields;
+use App\User\Domain\Exception\BadFormattedUserException;
 use App\User\Domain\ValueObject\UserCreatedAt;
 use App\User\Domain\ValueObject\UserEmail;
 use App\User\Domain\ValueObject\UserId;
@@ -20,7 +22,18 @@ class User
         private UserPassword $password,
         private UserImg $img,
         private UserCreatedAt $userCreatedAt
-    ) {}
+    ) {
+        if (!$userName->isValid() || !$userTag->isValid() || !$email->isValid() || !$password->isValid()) {
+            throw new BadFormattedUserException(
+                badFormatedUserFields: new BadFormatedUserFields(
+                    name: $userName->isValid(),
+                    usertag: $userTag->isValid(),
+                    email: $email->isValid(),
+                    password: $password->isValid()
+                )
+            );
+        }
+    }
 
     public static function create(
         UserId $userId,

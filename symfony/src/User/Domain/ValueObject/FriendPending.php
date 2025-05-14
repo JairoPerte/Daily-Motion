@@ -8,7 +8,7 @@ class FriendPending
         private bool $pending
     ) {}
 
-    public function isPending(): bool
+    public function getBool(): bool
     {
         return $this->pending;
     }

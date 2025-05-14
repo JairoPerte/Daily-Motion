@@ -3,7 +3,8 @@
 namespace App\Category\Infrastructure\Controller\DeleteCategory;
 
 use App\Authentication\Infrastructure\Context\AuthContext;
-use App\Category\Application\UseCase\CreateCategory\CreateCategoryHandler;
+use App\Category\Application\UseCase\DeleteCategory\DeleteCategoryCommand;
+use App\Category\Application\UseCase\DeleteCategory\DeleteCategoryHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -11,7 +12,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class DeleteCategoryController extends AbstractController
 {
     public function __construct(
-        private CreateCategoryHandler $handler,
+        private DeleteCategoryHandler $handler,
         private AuthContext $authContext
     ) {}
 
@@ -19,16 +20,11 @@ class DeleteCategoryController extends AbstractController
     public function index(
         string $id
     ): JsonResponse {
-        $category = ($this->handler)($id);
-        if ($category) {
-            return $this->json(
-                ["message" => "Se ha eliminado la categoría de id: $id"]
-            );
-        } else {
-            return $this->json(
-                ["message" => "No existe una categoría de id: $id"],
-                404
-            );
-        }
+        $command = new DeleteCategoryCommand(
+            $id,
+            $this->authContext->getUserId()
+        );
+        ($this->handler)($command);
+        return $this->json(["message" => "Category has been successfully deleted"], 200);
     }
 }
