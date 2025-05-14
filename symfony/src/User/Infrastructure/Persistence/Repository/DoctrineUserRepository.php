@@ -7,7 +7,6 @@ use App\User\Domain\EntityFields\ExistingUserFields;
 use App\User\Domain\Exception\ExistingUserException;
 use App\User\Domain\Exception\UserNotFoundException;
 use App\User\Domain\Repository\UserRepositoryInterface;
-use App\User\Domain\ValueObject\UserEmail;
 use App\User\Domain\ValueObject\UserId;
 use App\User\Domain\ValueObject\UserTag;
 use App\User\Infrastructure\Persistence\Entity\DoctrineUser;
@@ -88,7 +87,7 @@ class DoctrineUserRepository implements UserRepositoryInterface
             ->getRepository(DoctrineUser::class)
             ->createQueryBuilder('u')
             ->select('u.usertag', 'u.name', 'u.img')
-            ->addSelect('(SELECT COUNT(*) FROM friend AS f WHERE f.senderId=u.id OR f.receiverId=u.id) AS friends')
+            ->addSelect('(SELECT COUNT(*) FROM friend AS f WHERE (f.senderId=u.id OR f.receiverId=u.id) AND f.pending=false) AS friends')
             ->where('u.usertag LIKE :usertag')
             ->setParameter(":usertag", '%' . $search . '%')
             ->orWhere('u.name LIKE :name')
