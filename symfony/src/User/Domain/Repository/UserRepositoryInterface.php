@@ -11,10 +11,7 @@ interface UserRepositoryInterface
 {
     public function save(User $user): void;
 
-    /**
-     * @throws \App\User\Domain\Exception\UserNotFoundException
-     */
-    public function delete(User $user): void;
+    public function delete(UserId $userId): void;
 
     /**
      * @throws \App\User\Domain\Exception\UserNotFoundException
@@ -27,14 +24,14 @@ interface UserRepositoryInterface
     public function findByUsertag(UserTag $userTag): User;
 
     /**
-     * @throws \App\User\Domain\Exception\UserNotFoundException
+     * @return User[]
      */
     public function findUsersBySearch(string $search, int $limit, int $page): array;
 
     /**
-     * @throws \App\User\Domain\Exception\ExistingUserException
+     * @return User[]
      */
-    public function findUsertagEmailExists(string $email, string $usertag): void;
+    public function findUsersWith(string $email, string $usertag): array;
 
     /**
      * @throws \App\User\Domain\Exception\UserNotFoundException

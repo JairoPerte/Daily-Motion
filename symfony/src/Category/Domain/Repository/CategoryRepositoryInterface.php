@@ -10,10 +10,7 @@ interface CategoryRepositoryInterface
 {
     public function save(Category $category): void;
 
-    /**
-     * @throws \App\Category\Domain\Exception\CategoryNotFoundException
-     */
-    public function delete(Category $category): void;
+    public function delete(CategoryId $categoryId): void;
 
     /**
      * @throws \App\Category\Domain\Exception\CategoryNotFoundException

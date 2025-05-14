@@ -75,17 +75,10 @@ class DoctrineCategoryRepository implements CategoryRepositoryInterface
         $this->em->flush();
     }
 
-    /**
-     * @throws \App\Category\Domain\Exception\CategoryNotFoundException
-     */
-    public function delete(Category $category): void
+    public function delete(CategoryId $categoryId): void
     {
-        $doctrineCategory = $this->em->getRepository(DoctrineCategory::class)->find($category->getId()->getUuid());
-        if ($doctrineCategory) {
-            $this->em->remove($doctrineCategory);
-            $this->em->flush();
-        } else {
-            throw new CategoryNotFoundException();
-        }
+        $doctrineCategory = $this->em->getRepository(DoctrineCategory::class)->find($categoryId->getUuid());
+        $this->em->remove($doctrineCategory);
+        $this->em->flush();
     }
 }

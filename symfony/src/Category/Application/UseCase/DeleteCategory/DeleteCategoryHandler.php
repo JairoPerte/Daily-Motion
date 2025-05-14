@@ -19,7 +19,7 @@ class DeleteCategoryHandler
     {
         $category = $this->categoryRepository->findById(new CategoryId($command->categoryId));
         if ($category->getUserId()->getUuid() == $command->userId) {
-            $this->categoryRepository->delete($category);
+            $this->categoryRepository->delete($category->getId());
         } else {
             throw new CategoryNotOwnedByUserException();
         }

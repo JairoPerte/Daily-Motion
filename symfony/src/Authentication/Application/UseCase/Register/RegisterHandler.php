@@ -16,6 +16,7 @@ use App\Authentication\Domain\Security\JwtTokenManagerInterface;
 use App\Authentication\Application\Service\Security\PasswordHasher;
 use App\Authentication\Domain\Repository\SessionRepositoryInterface;
 use App\Authentication\Application\Service\Email\SendEmailVerification;
+use App\User\Application\Service\ThrowExceptionForExistingFields;
 
 class RegisterHandler
 {
@@ -25,7 +26,8 @@ class RegisterHandler
         private UuidGeneratorInterface $uuidGenerator,
         private PasswordHasher $passwordHasher,
         private SendEmailVerification $sendEmailVerification,
-        private JwtTokenManagerInterface $jwtTokenManager
+        private JwtTokenManagerInterface $jwtTokenManager,
+        private ThrowExceptionForExistingFields $throwExceptionForExistingFields
     ) {}
 
     public function __invoke(RegisterCommand $command): string
@@ -39,6 +41,9 @@ class RegisterHandler
         );
 
         $user->getPassword()->setHash($this->passwordHasher->hashPassword($user->getPassword()->getString()));
+
+        $usersWithSameFields = $this->userRepository->findUsersWith($command->email, $command->usertag);
+        ($this->throwExceptionForExistingFields)($usersWithSameFields, $command->usertag, $command->email);
 
         $this->userRepository->save($user);
 

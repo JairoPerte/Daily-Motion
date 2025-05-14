@@ -30,4 +30,45 @@ class Friend
             friendAcceptAt: null
         );
     }
+
+    public static function toEntity(
+        FriendId $friendId,
+        UserId $senderId,
+        UserId $receiverId,
+        FriendPending $friendPending,
+        ?FriendAcceptAt $friendAcceptAt
+    ): self {
+        return new self(
+            friendId: $friendId,
+            senderId: $senderId,
+            receiverId: $receiverId,
+            friendPending: $friendPending,
+            friendAcceptAt: $friendAcceptAt
+        );
+    }
+
+    public function getFriendId(): FriendId
+    {
+        return $this->friendId;
+    }
+
+    public function getSenderId(): UserId
+    {
+        return $this->senderId;
+    }
+
+    public function getReceiverId(): UserId
+    {
+        return $this->receiverId;
+    }
+
+    public function getFriendPending(): FriendPending
+    {
+        return $this->friendPending;
+    }
+
+    public function getFriendAcceptAt(): ?FriendAcceptAt
+    {
+        return $this->friendAcceptAt;
+    }
 }
