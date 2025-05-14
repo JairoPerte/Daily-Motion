@@ -2,7 +2,7 @@
 
 namespace App\User\Domain\Entity;
 
-use App\User\Domain\EntityFields\BadFormatedUserFields;
+use App\User\Domain\EntityFields\BadFormattedUserFields;
 use App\User\Domain\Exception\BadFormattedUserException;
 use App\User\Domain\ValueObject\UserCreatedAt;
 use App\User\Domain\ValueObject\UserEmail;
@@ -25,7 +25,7 @@ class User
     ) {
         if (!$userName->isValid() || !$userTag->isValid() || !$email->isValid() || !$password->isValid()) {
             throw new BadFormattedUserException(
-                badFormatedUserFields: new BadFormatedUserFields(
+                badFormatedUserFields: new BadFormattedUserFields(
                     name: $userName->isValid(),
                     usertag: $userTag->isValid(),
                     email: $email->isValid(),
