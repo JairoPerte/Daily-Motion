@@ -6,10 +6,7 @@ use App\Authentication\Domain\Exception\JwtNotFoundException;
 use App\Authentication\Domain\Exception\JwtNotValidException;
 use Throwable;
 use Symfony\Component\HttpKernel\Event\RequestEvent;
-use App\User\Domain\Repository\UserRepositoryInterface;
 use App\Authentication\Domain\Security\JwtTokenManagerInterface;
-use App\Authentication\Infrastructure\Security\AuthCookieManager;
-use App\Authentication\Domain\Repository\SessionRepositoryInterface;
 
 class JwtRequestListener
 {

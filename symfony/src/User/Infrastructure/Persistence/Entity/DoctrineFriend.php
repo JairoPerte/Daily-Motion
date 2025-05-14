@@ -12,10 +12,12 @@ use Doctrine\DBAL\Types\Types;
 class DoctrineFriend
 {
     #[ORM\Id]
+    #[ORM\Column(type: Types::STRING, name: "id")]
+    public string $id;
+
     #[ORM\Column(type: Types::STRING, name: "sender_id")]
     public string $senderId;
 
-    #[ORM\Id]
     #[ORM\Column(type: Types::STRING, name: "receiver_id")]
     public string $receiverId;
 
