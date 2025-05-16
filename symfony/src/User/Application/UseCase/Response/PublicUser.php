@@ -1,8 +1,7 @@
 <?php
 
-namespace App\User\Domain\Entity;
+namespace App\User\Application\UseCase\Response;
 
-use App\User\Domain\ValueObject\PublicUserRelation;
 use DateTimeImmutable;
 
 class PublicUser

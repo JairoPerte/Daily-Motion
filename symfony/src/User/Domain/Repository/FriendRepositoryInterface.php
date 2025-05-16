@@ -16,8 +16,5 @@ interface FriendRepositoryInterface
 
     public function findFriends(UserId $userId, int $page, int $limit): array;
 
-    /**
-     * @throws \App\User\Domain\Exception\FriendNotFoundException
-     */
-    public function findByUsersId(UserId $userId1, UserId $userId2): Friend;
+    public function findByUsersId(UserId $userId1, UserId $userId2): ?Friend;
 }

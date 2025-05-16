@@ -13,15 +13,11 @@ interface UserRepositoryInterface
 
     public function delete(UserId $userId): void;
 
-    /**
-     * @throws \App\User\Domain\Exception\UserNotFoundException
-     */
-    public function findById(UserId $userId): User;
+    public function findById(UserId $userId): ?User;
 
-    /**
-     * @throws \App\User\Domain\Exception\UserNotFoundException
-     */
-    public function findByUsertag(UserTag $userTag): User;
+    public function findByUsertag(UserTag $userTag): ?User;
+
+    public function findByEmail(string $email): ?User;
 
     /**
      * @return User[]
@@ -32,9 +28,4 @@ interface UserRepositoryInterface
      * @return User[]
      */
     public function findUsersWith(string $email, string $usertag): array;
-
-    /**
-     * @throws \App\User\Domain\Exception\UserNotFoundException
-     */
-    public function findByEmail(string $email): User;
 }

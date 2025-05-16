@@ -7,6 +7,7 @@ class ListCategoryPaginatedQuery
     public function __construct(
         public readonly ?int $iconNumber,
         public readonly ?string $name,
-        public readonly int $page
+        public readonly int $page,
+        public readonly int $limit
     ) {}
 }

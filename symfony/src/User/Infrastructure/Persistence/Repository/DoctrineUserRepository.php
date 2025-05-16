@@ -36,40 +36,31 @@ class DoctrineUserRepository implements UserRepositoryInterface
         $this->em->flush();
     }
 
-    /**
-     * @throws \App\User\Domain\Exception\UserNotFoundException
-     */
-    public function findById(UserId $userId): User
+    public function findById(UserId $userId): ?User
     {
         $doctrineUser = $this->em->getRepository(DoctrineUser::class)->find($userId->getUuid());
         if ($doctrineUser) {
             return $this->mapper->toDomain($doctrineUser);
         }
-        throw new UserNotFoundException();
+        return null;
     }
 
-    /**
-     * @throws \App\User\Domain\Exception\UserNotFoundException
-     */
-    public function findByUsertag(UserTag $userTag): User
+    public function findByUsertag(UserTag $userTag): ?User
     {
         $doctrineUser = $this->em->getRepository(DoctrineUser::class)->findOneBy(["usertag" => $userTag->getString()]);
         if ($doctrineUser) {
             return $this->mapper->toDomain($doctrineUser);
         }
-        throw new UserNotFoundException();
+        return null;
     }
 
-    /**
-     * @throws \App\User\Domain\Exception\UserNotFoundException
-     */
-    public function findByEmail(string $email): User
+    public function findByEmail(string $email): ?User
     {
         $doctrineUser = $this->em->getRepository(DoctrineUser::class)->findOneBy(["email" => $email]);
         if ($doctrineUser) {
             return $this->mapper->toDomain($doctrineUser);
         }
-        throw new UserNotFoundException();
+        return null;
     }
 
     /**
@@ -77,7 +68,6 @@ class DoctrineUserRepository implements UserRepositoryInterface
      */
     public function findUsersBySearch(string $search, int $limit, int $page): array
     {
-        // PASAR ESTOS DATOS A CRITERIA Y HACER UN USERLIMITPERROUTES
         $doctrineUsersSearched = $this->em
             ->getRepository(DoctrineUser::class)
             ->createQueryBuilder('u')
@@ -98,7 +88,6 @@ class DoctrineUserRepository implements UserRepositoryInterface
             ->setFirstResult(($page - 1) * $limit)
             ->getQuery()
             ->getResult();
-        //TENER QUE HACER UN USER PUBLIC ÚNICAMENTE CON LOS VALORES PERMITIDOS ÚNICAMTE
         return $doctrineUsersSearched;
     }
 

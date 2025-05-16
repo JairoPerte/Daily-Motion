@@ -2,9 +2,10 @@
 
 namespace App\Category\Domain\Repository;
 
-use App\Category\Domain\Criteria\CategoryCriteria;
+use App\User\Domain\ValueObject\UserId;
 use App\Category\Domain\Entity\Category;
 use App\Category\Domain\ValueObject\CategoryId;
+use App\Category\Domain\Criteria\CategoryCriteria;
 
 interface CategoryRepositoryInterface
 {
@@ -12,13 +13,10 @@ interface CategoryRepositoryInterface
 
     public function delete(CategoryId $categoryId): void;
 
-    /**
-     * @throws \App\Category\Domain\Exception\CategoryNotFoundException
-     */
     public function findById(CategoryId $id): ?Category;
 
     /**
      * @return Category[]
      */
-    public function findByCriteriaPaginated(CategoryCriteria $criteria): ?array;
+    public function findByCriteriaPaginated(CategoryCriteria $criteria, UserId $userId, int $page, int $limit): array;
 }

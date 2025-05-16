@@ -26,6 +26,7 @@ class ListCategoryPaginatedController extends AbstractController
             iconNumber: $query->iconNumber,
             name: $query->name,
             page: $query->page,
+            limit: $query->limit,
             userId: $this->authContext->getUserId()
         );
 

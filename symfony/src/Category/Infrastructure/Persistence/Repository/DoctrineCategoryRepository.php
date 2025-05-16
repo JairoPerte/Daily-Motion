@@ -10,6 +10,7 @@ use App\Category\Domain\Criteria\CategoryCriteria;
 use App\Category\Domain\Repository\CategoryRepositoryInterface;
 use App\Category\Infrastructure\Persistence\Entity\DoctrineCategory;
 use App\Category\Infrastructure\Persistence\Mapper\CategoryMapper;
+use App\User\Domain\ValueObject\UserId;
 
 class DoctrineCategoryRepository implements CategoryRepositoryInterface
 {
@@ -18,21 +19,21 @@ class DoctrineCategoryRepository implements CategoryRepositoryInterface
         private CategoryMapper $mapper
     ) {}
 
-    /**
-     * @throws \App\Category\Domain\Exception\CategoryNotFoundException
-     */
-    public function findById(CategoryId $id): Category
+    public function findById(CategoryId $id): ?Category
     {
         $doctrineCategory = $this->em->getRepository(DoctrineCategory::class)->find($id->getUuid());
         if ($doctrineCategory) {
             return $this->mapper->toDomain($doctrineCategory);
         }
-        throw new CategoryNotFoundException();
+        return null;
     }
 
-    public function findByCriteriaPaginated(CategoryCriteria $criteria): array
+    /**
+     * @return Category[]
+     */
+    public function findByCriteriaPaginated(CategoryCriteria $criteria, UserId $userId, int $page, int $limit): array
     {
-        if ($criteria->page <= 0) {
+        if ($page <= 0) {
             return [];
         }
 
@@ -42,9 +43,9 @@ class DoctrineCategoryRepository implements CategoryRepositoryInterface
             ->orderBy('c.iconNumber', 'ASC')
             ->addOrderBy('c.name', 'ASC')
             ->andWhere('c.userId = :userId')
-            ->setParameter('userId', $criteria->userId)
-            ->setFirstResult(($criteria->page - 1) * $criteria->limit)
-            ->setMaxResults($criteria->limit);
+            ->setParameter('userId', $userId->getUuid())
+            ->setFirstResult(($page - 1) * $limit)
+            ->setMaxResults($limit);
 
         if ($criteria->name) {
             $qb->andWhere('c.name LIKE :name')

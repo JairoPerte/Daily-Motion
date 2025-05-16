@@ -34,10 +34,7 @@ class DoctrineFriendRepository implements FriendRepositoryInterface
         $this->em->flush();
     }
 
-    /**
-     * @throws \App\User\Domain\Exception\FriendNotFoundException
-     */
-    public function findByUsersId(UserId $userId1, UserId $userId2): Friend
+    public function findByUsersId(UserId $userId1, UserId $userId2): ?Friend
     {
         $friend = $this->em->getRepository(DoctrineFriend::class)
             ->createQueryBuilder("f")
@@ -57,7 +54,7 @@ class DoctrineFriendRepository implements FriendRepositoryInterface
             return $this->mapper->toDomain($friend);
         }
 
-        throw new FriendNotFoundException();
+        return null;
     }
 
     public function findFriends(UserId $userId, int $page, int $limit): array
