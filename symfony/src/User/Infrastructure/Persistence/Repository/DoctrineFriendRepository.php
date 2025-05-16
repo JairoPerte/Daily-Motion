@@ -57,6 +57,9 @@ class DoctrineFriendRepository implements FriendRepositoryInterface
         return null;
     }
 
+    /**
+     * @return Friend[]
+     */
     public function findFriends(UserId $userId, int $page, int $limit): array
     {
         $doctrineFriends = $this->em->getRepository(DoctrineFriend::class)

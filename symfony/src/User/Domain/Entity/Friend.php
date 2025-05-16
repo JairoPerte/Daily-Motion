@@ -14,7 +14,7 @@ class Friend
         private UserId $senderId,
         private UserId $receiverId,
         private FriendPending $friendPending,
-        private ?FriendAcceptAt $friendAcceptAt
+        private ?FriendAcceptAt $friendAcceptedAt
     ) {}
 
     public static function create(
@@ -27,7 +27,7 @@ class Friend
             senderId: $senderId,
             receiverId: $receiverId,
             friendPending: FriendPending::sendFriendRequest(),
-            friendAcceptAt: null
+            friendAcceptedAt: null
         );
     }
 
@@ -43,7 +43,7 @@ class Friend
             senderId: $senderId,
             receiverId: $receiverId,
             friendPending: $friendPending,
-            friendAcceptAt: $friendAcceptAt
+            friendAcceptedAt: $friendAcceptAt
         );
     }
 
@@ -69,6 +69,6 @@ class Friend
 
     public function getFriendAcceptAt(): ?FriendAcceptAt
     {
-        return $this->friendAcceptAt;
+        return $this->friendAcceptedAt;
     }
 }

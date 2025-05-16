@@ -14,6 +14,9 @@ interface FriendRepositoryInterface
 
     public function countFriends(UserId $userId): int;
 
+    /**
+     * @return Friend[]
+     */
     public function findFriends(UserId $userId, int $page, int $limit): array;
 
     public function findByUsersId(UserId $userId1, UserId $userId2): ?Friend;
