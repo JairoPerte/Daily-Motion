@@ -2,33 +2,31 @@
 
 namespace App\User\Application\UseCase\UserFriends;
 
-use App\User\Application\UseCase\Response\PublicUserRelation;
-use App\User\Domain\Criteria\FriendsLimitPerRoute;
+use App\User\Application\Service\FriendsToUserFriendsPublic;
 use App\User\Domain\Repository\FriendRepositoryInterface;
+use App\User\Domain\Repository\FriendWithUserRepositoryInterface;
 use App\User\Domain\Repository\UserRepositoryInterface;
-use App\User\Domain\ValueObject\UserId;
 use App\User\Domain\ValueObject\UserTag;
 
 class UserFriendsHandler
 {
     public function __construct(
         private FriendRepositoryInterface $friendRepository,
-        private UserRepositoryInterface $userRepository
+        private UserRepositoryInterface $userRepository,
+        private FriendWithUserRepositoryInterface $friendWithUserRepository,
+        private FriendsToUserFriendsPublic $friendsToUserFriendsPublic
     ) {}
 
-    public function __invoke(UserFriendsCommand $command): array
+    public function __invoke(UserFriendsCommand $command): UserFriendsPublic
     {
         $user = $this->userRepository->findByUsertag(new UserTag($command->usertag));
 
-        $friends = $this->friendRepository->findFriends(
+        $friends = $this->friendWithUserRepository->findFriends(
             userId: $user->getId(),
             page: $command->page,
             limit: $command->limit
         );
-        $relation = PublicUserRelation::STRANGERS;
 
-        if ($user->getId()->getUuid() == $command->visitorId) {
-            $relation = PublicUserRelation::YOURSELF;
-        }
+        return ($this->friendsToUserFriendsPublic)($friends, $user, $command->visitorId);
     }
 }

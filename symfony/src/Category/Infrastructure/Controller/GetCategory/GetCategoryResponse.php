@@ -5,8 +5,8 @@ namespace App\Category\Infrastructure\Controller\GetCategory;
 class GetCategoryResponse
 {
     public function __construct(
-        public string $id,
-        public int $iconNumber,
-        public string $name
+        public readonly string $id,
+        public readonly int $iconNumber,
+        public readonly string $name
     ) {}
 }

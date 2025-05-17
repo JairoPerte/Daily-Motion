@@ -8,9 +8,6 @@ use App\User\Domain\ValueObject\UserId;
 use App\User\Domain\ValueObject\UserTag;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
-use App\User\Domain\EntityFields\ExistingUserFields;
-use App\User\Domain\Exception\ExistingUserException;
-use App\User\Domain\Exception\UserNotFoundException;
 use App\User\Domain\Repository\UserRepositoryInterface;
 use App\User\Infrastructure\Persistence\Mapper\UserMapper;
 use App\User\Infrastructure\Persistence\Entity\DoctrineUser;
@@ -88,7 +85,15 @@ class DoctrineUserRepository implements UserRepositoryInterface
             ->setFirstResult(($page - 1) * $limit)
             ->getQuery()
             ->getResult();
-        return $doctrineUsersSearched;
+
+        if ($doctrineUsersSearched) {
+            return array_map(
+                fn(DoctrineUser $doctrineUser): User => $this->mapper->toDomain($doctrineUser),
+                $doctrineUsersSearched
+            );
+        } else {
+            return [];
+        }
     }
 
     /**
@@ -98,7 +103,7 @@ class DoctrineUserRepository implements UserRepositoryInterface
     {
         $doctrineUsers = $this->em->getRepository(DoctrineUser::class)
             ->createQueryBuilder("u")
-            ->select("u.usertag", "u.email")
+            ->select("u")
             ->where("u.email = :email OR u.usertag = :usertag")
             ->setParameters(new ArrayCollection([
                 new Parameter('email', $email),
@@ -107,6 +112,13 @@ class DoctrineUserRepository implements UserRepositoryInterface
             ->getQuery()
             ->getResult();
 
-        return $doctrineUsers;
+        if ($doctrineUsers) {
+            return array_map(
+                fn(DoctrineUser $doctrineUser): User => $this->mapper->toDomain($doctrineUser),
+                $doctrineUsers
+            );
+        } else {
+            return [];
+        }
     }
 }

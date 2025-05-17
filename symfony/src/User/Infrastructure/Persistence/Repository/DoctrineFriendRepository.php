@@ -2,16 +2,16 @@
 
 namespace App\User\Infrastructure\Persistence\Repository;
 
-use App\User\Domain\Entity\Friend;
-use App\User\Domain\Exception\FriendNotFoundException;
-use App\User\Domain\ValueObject\UserId;
-use App\User\Domain\Repository\FriendRepositoryInterface;
-use App\User\Domain\ValueObject\FriendId;
-use App\User\Infrastructure\Persistence\Entity\DoctrineFriend;
-use App\User\Infrastructure\Persistence\Mapper\FriendMapper;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Query\Parameter;
+use App\User\Domain\Entity\Friend;
+use App\User\Domain\ValueObject\UserId;
+use Doctrine\ORM\EntityManagerInterface;
+use App\User\Domain\ValueObject\FriendId;
+use Doctrine\Common\Collections\ArrayCollection;
+use App\User\Domain\Repository\FriendRepositoryInterface;
+use App\User\Infrastructure\Persistence\Mapper\UserMapper;
+use App\User\Infrastructure\Persistence\Mapper\FriendMapper;
+use App\User\Infrastructure\Persistence\Entity\DoctrineFriend;
 
 class DoctrineFriendRepository implements FriendRepositoryInterface
 {
@@ -57,35 +57,9 @@ class DoctrineFriendRepository implements FriendRepositoryInterface
         return null;
     }
 
-    /**
-     * @return Friend[]
-     */
-    public function findFriends(UserId $userId, int $page, int $limit): array
-    {
-        $doctrineFriends = $this->em->getRepository(DoctrineFriend::class)
-            ->createQueryBuilder("f")
-            ->select("f")
-            ->where("f.senderId = :userId OR f.receiverId = :userId")
-            ->andWhere("f.pending = false")
-            ->setParameter("userId", $userId->getUuid())
-            ->setMaxResults($limit)
-            ->setFirstResult(($page - 1) * $limit)
-            ->getQuery()
-            ->getResult();
-
-        if ($doctrineFriends) {
-            return array_map(
-                fn(DoctrineFriend $doctrineFriend): Friend => $this->mapper->toDomain($doctrineFriend),
-                $doctrineFriends
-            );
-        } else {
-            return [];
-        }
-    }
-
     public function countFriends(UserId $userId): int
     {
-        $doctrineFriends = $this->em->getRepository(DoctrineFriend::class)
+        $friendsNum = $this->em->getRepository(DoctrineFriend::class)
             ->createQueryBuilder("f")
             ->select("COUNT(f)")
             ->where("f.senderId = :userId OR f.receiverId = :userId")
@@ -93,6 +67,6 @@ class DoctrineFriendRepository implements FriendRepositoryInterface
             ->setParameter("userId", $userId->getUuid())
             ->getQuery()
             ->getSingleScalarResult();
-        return $doctrineFriends;
+        return $friendsNum;
     }
 }

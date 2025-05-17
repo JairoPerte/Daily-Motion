@@ -27,6 +27,14 @@ class UserProfileController extends AbstractController
 
         $publicUser = ($this->handler)($command);
 
-        return $this->json($publicUser, 200);
+        $response = new UserProfileResponse(
+            name: $publicUser->name->getString(),
+            usertag: $publicUser->usertag->getString(),
+            img: $publicUser->img->getString(),
+            userCreatedAt: $publicUser->createdAt->getDateTimeImmutable(),
+            relation: $publicUser->relation->value
+        );
+
+        return $this->json($response, 200);
     }
 }

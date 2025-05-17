@@ -3,6 +3,7 @@
 namespace App\User\Infrastructure\Controller\UserFriends;
 
 use App\Authentication\Infrastructure\Context\AuthContext;
+use App\User\Application\UseCase\UserFriends\PublicFriend;
 use App\User\Application\UseCase\UserFriends\UserFriendsCommand;
 use App\User\Application\UseCase\UserFriends\UserFriendsHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -21,7 +22,6 @@ class UserFriendsController extends AbstractController
     public function index(
         #[MapQueryString] UserFriendsQuery $query,
         string $usertag
-
     ): JsonResponse {
         $command = new UserFriendsCommand(
             usertag: $usertag,
@@ -30,8 +30,23 @@ class UserFriendsController extends AbstractController
             visitorId: $this->authContext->getUserId()
         );
 
-        $friends = ($this->handler)($command);
+        $userFriends = ($this->handler)($command);
 
-        return $this->json($friends, 200);
+        $friends = array_map(
+            fn(PublicFriend $publicFriend): FriendResponse => new FriendResponse(
+                name: $publicFriend->name->getString(),
+                usertag: $publicFriend->usertag->getString(),
+                img: $publicFriend->img->getString(),
+                friendsAcceptedAt: $publicFriend->friendsAcceptedAt->getDateTimeImmutable()
+            ),
+            $userFriends->friends,
+        );
+
+        $response = new UserFriendsResponse(
+            friends: $friends,
+            publicUserRelation: $userFriends->publicUserRelation->value
+        );
+
+        return $this->json($response, 200);
     }
 }

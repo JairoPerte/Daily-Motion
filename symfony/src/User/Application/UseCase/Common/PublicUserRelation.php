@@ -1,6 +1,6 @@
 <?php
 
-namespace App\User\Application\UseCase\Response;
+namespace App\User\Application\UseCase\Common;
 
 enum PublicUserRelation: int
 {

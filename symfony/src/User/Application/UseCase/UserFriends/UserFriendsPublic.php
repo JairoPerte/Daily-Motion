@@ -2,14 +2,15 @@
 
 namespace App\User\Application\UseCase\UserFriends;
 
-use DateTimeImmutable;
+use App\User\Application\UseCase\Common\PublicUserRelation;
 
 class UserFriendsPublic
 {
+    /**
+     * @param PublicFriend[] $friends
+     */
     public function __construct(
-        public readonly string $name,
-        public readonly string $usertag,
-        public readonly string $img,
-        public readonly DateTimeImmutable $friendsAcceptedAt
+        public readonly array $friends,
+        public readonly PublicUserRelation $publicUserRelation
     ) {}
 }
