@@ -7,9 +7,10 @@ use App\Category\Domain\Exception\CategoryIconNotExistException;
 class CategoryIconNumber
 {
     public function __construct(
-        private readonly int $iconNumber
+        private int $iconNumber
     ) {
-        if ($iconNumber <= 0) {
+        if ($iconNumber < 0) {
+            throw new CategoryIconNotExistException();
         }
     }
 

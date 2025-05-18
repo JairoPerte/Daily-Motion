@@ -2,6 +2,13 @@
 
 namespace App\Shared\Domain\Uuid;
 
-use Exception;
+use App\Shared\Domain\Exception\DailyMotionException;
 
-class UuidException extends Exception {}
+class UuidException extends DailyMotionException
+{
+    public function __construct()
+    {
+        parent::__construct("Uuid bad formatted");
+        $this->httpCode = 400;
+    }
+}

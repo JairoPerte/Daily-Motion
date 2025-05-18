@@ -7,8 +7,8 @@ use DateTimeImmutable;
 class ActivityTimeStamps
 {
     public function __construct(
-        private readonly DateTimeImmutable $startedAt,
-        private readonly ?DateTimeImmutable $finishedAt
+        private DateTimeImmutable $startedAt,
+        private ?DateTimeImmutable $finishedAt
     ) {}
 
     public function getStartedAt(): DateTimeImmutable
@@ -16,16 +16,8 @@ class ActivityTimeStamps
         return $this->startedAt;
     }
 
-    public function getFinishedAt(): DateTimeImmutable
+    public function getFinishedAt(): ?DateTimeImmutable
     {
         return $this->finishedAt;
-    }
-
-    public static function newActivity(): self
-    {
-        return new self(
-            startedAt: new DateTimeImmutable(),
-            finishedAt: null
-        );
     }
 }
