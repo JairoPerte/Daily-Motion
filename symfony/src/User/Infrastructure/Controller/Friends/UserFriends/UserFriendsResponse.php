@@ -1,6 +1,6 @@
 <?php
 
-namespace App\User\Infrastructure\Controller\UserFriends;
+namespace App\User\Infrastructure\Controller\Friends\UserFriends;
 
 class UserFriendsResponse
 {

@@ -28,4 +28,9 @@ interface UserRepositoryInterface
      * @return User[]
      */
     public function findUsersWith(string $email, string $usertag): array;
+
+    /**
+     * @return User[]
+     */
+    public function findFriendsPending(UserId $userId): array;
 }

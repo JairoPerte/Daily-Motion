@@ -1,12 +1,13 @@
 <?php
 
-namespace App\User\Application\UseCase\UserFriends;
+namespace App\User\Application\UseCase\Friends\UserFriends;
 
-use App\User\Application\Service\FriendsToUserFriendsPublic;
-use App\User\Domain\Repository\FriendRepositoryInterface;
-use App\User\Domain\Repository\FriendWithUserRepositoryInterface;
-use App\User\Domain\Repository\UserRepositoryInterface;
 use App\User\Domain\ValueObject\UserTag;
+use App\User\Domain\Exception\UserNotFoundException;
+use App\User\Domain\Repository\UserRepositoryInterface;
+use App\User\Domain\Repository\FriendRepositoryInterface;
+use App\User\Application\Service\FriendsToUserFriendsPublic;
+use App\User\Domain\Repository\FriendWithUserRepositoryInterface;
 
 class UserFriendsHandler
 {
@@ -20,6 +21,10 @@ class UserFriendsHandler
     public function __invoke(UserFriendsCommand $command): UserFriendsPublic
     {
         $user = $this->userRepository->findByUsertag(new UserTag($command->usertag));
+
+        if (!$user) {
+            throw new UserNotFoundException();
+        }
 
         $friends = $this->friendWithUserRepository->findFriends(
             userId: $user->getId(),

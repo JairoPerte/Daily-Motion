@@ -75,12 +75,14 @@ class User
 
     public function update(
         UserName $userName,
-        UserEmail $email,
-        UserPassword $password
+        UserTag $userTag,
+        UserPassword $password,
+        UserImg $img,
     ): void {
         $this->userName = $userName;
-        $this->email = $email;
         $this->password = $password;
+        $this->userTag = $userTag;
+        $this->img = $img;
     }
 
     public function getId(): UserId

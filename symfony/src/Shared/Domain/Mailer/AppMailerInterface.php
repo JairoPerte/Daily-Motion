@@ -4,17 +4,21 @@ namespace App\Shared\Domain\Mailer;
 
 use App\User\Domain\ValueObject\UserEmail;
 use App\Authentication\Domain\Entity\Session;
-use App\Shared\Domain\Exception\MailException;
 
 interface AppMailerInterface
 {
     /**
-     * @throws MailException
+     * @throws App\Shared\Domain\Exception\MailException
      */
     public function sendEmailCode(UserEmail $userEmail): void;
 
     /**
-     * @throws MailException
+     * @throws App\Shared\Domain\Exception\MailException
      */
     public function sendLogInEmail(UserEmail $userEmail, Session $session): void;
+
+    /**
+     * @throws App\Shared\Domain\Exception\MailException
+     */
+    public function sendFriendRequest(UserEmail $userEmail): void;
 }

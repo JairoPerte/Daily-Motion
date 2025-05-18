@@ -1,25 +1,22 @@
 <?php
 
-namespace App\User\Application\UseCase\UserProfile;
+namespace App\User\Application\UseCase\Friends\DeleteFriend;
 
 use App\User\Domain\ValueObject\UserId;
 use App\User\Domain\ValueObject\UserTag;
-use App\User\Application\Service\UserToPublicUser;
 use App\User\Domain\Exception\UserNotFoundException;
-use App\User\Domain\Repository\UserRepositoryInterface;
-use App\User\Application\UseCase\UserProfile\PublicUser;
 use App\User\Domain\Exception\FriendNotFoundException;
+use App\User\Domain\Repository\UserRepositoryInterface;
 use App\User\Domain\Repository\FriendRepositoryInterface;
 
-class UserProfileHandler
+class DeleteFriendHandler
 {
     public function __construct(
-        private UserRepositoryInterface $userRepository,
         private FriendRepositoryInterface $friendRepository,
-        private UserToPublicUser $userToPublicUser
+        private UserRepositoryInterface $userRepository
     ) {}
 
-    public function __invoke(UserProfileCommand $command): PublicUser
+    public function __invoke(DeleteFriendCommand $command): void
     {
         $user = $this->userRepository->findByUsertag(new UserTag($command->usertag));
 
@@ -27,12 +24,12 @@ class UserProfileHandler
             throw new UserNotFoundException();
         }
 
-        $friend = $this->friendRepository->findByUsersId($user->getId(), new UserId($command->visitorId));
+        $friend = $this->friendRepository->findByUsersId(new UserId($command->id), $user->getId());
 
         if (!$friend) {
             throw new FriendNotFoundException();
         }
 
-        return ($this->userToPublicUser)($friend, $user, $command->visitorId);
+        $this->friendRepository->delete($friend->getFriendId());
     }
 }

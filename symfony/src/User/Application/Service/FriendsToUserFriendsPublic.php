@@ -2,11 +2,11 @@
 
 namespace App\User\Application\Service;
 
-use App\User\Application\UseCase\UserFriends\PublicFriend;
-use App\User\Application\UseCase\Common\PublicUserRelation;
-use App\User\Application\UseCase\UserFriends\UserFriendsPublic;
-use App\User\Domain\Entity\FriendWithUser;
 use App\User\Domain\Entity\User;
+use App\User\Domain\Entity\FriendWithUser;
+use App\User\Application\UseCase\Common\PublicUserRelation;
+use App\User\Application\UseCase\Friends\UserFriends\PublicFriend;
+use App\User\Application\UseCase\Friends\UserFriends\UserFriendsPublic;
 
 class FriendsToUserFriendsPublic
 {

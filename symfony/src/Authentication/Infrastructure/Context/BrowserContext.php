@@ -2,7 +2,6 @@
 
 namespace App\Authentication\Infrastructure\Context;
 
-use App\User\Domain\Entity\User;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class BrowserContext

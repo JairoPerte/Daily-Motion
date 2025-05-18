@@ -6,6 +6,7 @@ use App\User\Domain\ValueObject\FriendAcceptAt;
 use App\User\Domain\ValueObject\FriendId;
 use App\User\Domain\ValueObject\FriendPending;
 use App\User\Domain\ValueObject\UserId;
+use DateTimeImmutable;
 
 class Friend
 {
@@ -45,6 +46,14 @@ class Friend
             friendPending: $friendPending,
             friendAcceptedAt: $friendAcceptAt
         );
+    }
+
+    public function acceptFriendRequest(): void
+    {
+        if ($this->getFriendPending()->getBool()) {
+            $this->friendAcceptedAt = FriendAcceptAt::acceptFriendRequest();
+            $this->friendPending = FriendPending::acceptFriendRequest();
+        }
     }
 
     public function getFriendId(): FriendId

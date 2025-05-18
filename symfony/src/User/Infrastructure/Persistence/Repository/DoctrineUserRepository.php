@@ -9,6 +9,7 @@ use App\User\Domain\ValueObject\UserTag;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\User\Domain\Repository\UserRepositoryInterface;
+use App\User\Infrastructure\Persistence\Entity\DoctrineFriend;
 use App\User\Infrastructure\Persistence\Mapper\UserMapper;
 use App\User\Infrastructure\Persistence\Entity\DoctrineUser;
 
@@ -68,11 +69,10 @@ class DoctrineUserRepository implements UserRepositoryInterface
         $doctrineUsersSearched = $this->em
             ->getRepository(DoctrineUser::class)
             ->createQueryBuilder('u')
-            ->select('u.usertag', 'u.name', 'u.img', 'u.createdAt')
-            ->addSelect('
-                (
+            ->select('u')
+            ->addSelect('(
                     SELECT COUNT(f)
-                    FROM App\Entity\DoctrineFriend f
+                    FROM ' . DoctrineUser::class . ' f
                     WHERE (f.senderId = u.id OR f.receiverId = u.id)
                     AND f.pending = false
                 ) AS HIDDEN friendsCount
@@ -109,6 +109,37 @@ class DoctrineUserRepository implements UserRepositoryInterface
                 new Parameter('email', $email),
                 new Parameter('usertag', $usertag),
             ]))
+            ->getQuery()
+            ->getResult();
+
+        if ($doctrineUsers) {
+            return array_map(
+                fn(DoctrineUser $doctrineUser): User => $this->mapper->toDomain($doctrineUser),
+                $doctrineUsers
+            );
+        } else {
+            return [];
+        }
+    }
+
+    /**
+     * @return User[]
+     */
+    public function findFriendsPending(UserId $userId): array
+    {
+        $doctrineUsers = $this->em->createQueryBuilder()
+            ->select('u')
+            ->from(DoctrineUser::class, 'u')
+            ->where(
+                'EXISTS (
+                SELECT 1
+                    FROM ' . DoctrineFriend::class . ' f
+                    WHERE f.senderId = u.id
+                        AND f.receiverId = :userId
+                        AND f.pending = true
+                )'
+            )
+            ->setParameter('userId', $userId->getUuid())
             ->getQuery()
             ->getResult();
 

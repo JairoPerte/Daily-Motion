@@ -9,7 +9,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\User\Domain\ValueObject\FriendId;
 use Doctrine\Common\Collections\ArrayCollection;
 use App\User\Domain\Repository\FriendRepositoryInterface;
-use App\User\Infrastructure\Persistence\Mapper\UserMapper;
 use App\User\Infrastructure\Persistence\Mapper\FriendMapper;
 use App\User\Infrastructure\Persistence\Entity\DoctrineFriend;
 

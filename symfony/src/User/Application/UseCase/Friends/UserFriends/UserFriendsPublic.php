@@ -1,6 +1,6 @@
 <?php
 
-namespace App\User\Application\UseCase\UserFriends;
+namespace App\User\Application\UseCase\Friends\UserFriends;
 
 use App\User\Application\UseCase\Common\PublicUserRelation;
 

@@ -1,15 +1,15 @@
 <?php
 
-namespace App\User\Infrastructure\Controller\UserFriends;
+namespace App\User\Infrastructure\Controller\Friends\UserFriends;
 
-use App\Authentication\Infrastructure\Context\AuthContext;
-use App\User\Application\UseCase\UserFriends\PublicFriend;
-use App\User\Application\UseCase\UserFriends\UserFriendsCommand;
-use App\User\Application\UseCase\UserFriends\UserFriendsHandler;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Authentication\Infrastructure\Context\AuthContext;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\User\Application\UseCase\Friends\UserFriends\PublicFriend;
+use App\User\Application\UseCase\Friends\UserFriends\UserFriendsCommand;
+use App\User\Application\UseCase\Friends\UserFriends\UserFriendsHandler;
 
 class UserFriendsController extends AbstractController
 {

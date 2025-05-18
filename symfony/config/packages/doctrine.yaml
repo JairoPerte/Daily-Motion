@@ -36,7 +36,7 @@ doctrine:
           dir: '%kernel.project_dir%/src/Activity/Infrastructure/Persistence'
           prefix: 'App\Activity\Infrastructure\Persistence\Entity'
           alias: App\Activity\Infrastructure\Persistence\Entity
-       User:
+       UserAndFriend:
           type: attribute
           is_bundle: false
           dir: '%kernel.project_dir%/src/User/Infrastructure/Persistence'
