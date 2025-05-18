@@ -27,7 +27,7 @@ class LogOutController  extends AbstractController
 
         ($this->handler)($command);
 
-        $response = $this->json(["message" => "Session has been successfully logout"], 200);
+        $response = $this->json(["message" => "Session has been successfully logout"], 204);
         $this->cookieManager->clearTokenCookie($response);
         return $response;
     }

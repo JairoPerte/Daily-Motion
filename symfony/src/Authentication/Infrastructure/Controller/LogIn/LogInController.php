@@ -32,7 +32,7 @@ class LogInController extends AbstractController
 
         $jwt = ($this->handler)($command);
 
-        $response = new JsonResponse(['message' => 'User has been successfully login'], 201);
+        $response = $this->json(['message' => 'User has been successfully login'], 204);
         $this->authCookieManager->setTokenCookie($response, $jwt);
         return $response;
     }

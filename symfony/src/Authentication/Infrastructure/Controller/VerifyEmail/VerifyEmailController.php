@@ -29,6 +29,6 @@ class VerifyEmailController extends AbstractController
 
         ($this->handler)($command);
 
-        return $this->json(["message" => "Email code is correct"], 200);
+        return $this->json(["message" => "Email code is correct"], 204);
     }
 }

@@ -37,6 +37,6 @@ class UpdateCategoryController extends AbstractController
             iconNumber: $category->getName()->getString(),
             name: $category->getName()->getString()
         );
-        return $this->json($response);
+        return $this->json($response, 201);
     }
 }

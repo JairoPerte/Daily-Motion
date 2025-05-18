@@ -25,6 +25,6 @@ class DeleteCategoryController extends AbstractController
             $this->authContext->getUserId()
         );
         ($this->handler)($command);
-        return $this->json(["message" => "Category has been successfully deleted"], 200);
+        return $this->json(["message" => "Category has been successfully deleted"], 204);
     }
 }

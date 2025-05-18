@@ -51,6 +51,6 @@ class UserSettingsController extends AbstractController
             userCreatedAt: $user->getUserCreatedAt()->getDateTimeImmutable()
         );
 
-        return $this->json($response, 200);
+        return $this->json($response, 201);
     }
 }

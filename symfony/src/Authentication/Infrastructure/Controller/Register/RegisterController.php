@@ -35,10 +35,8 @@ class RegisterController extends AbstractController
 
         $jwt = ($this->handler)($command);
 
-        $response = new JsonResponse(['message' => 'User has successfully complete the registration'], 201);
-
+        $response = $this->json(['message' => 'User has successfully complete the registration'], 204);
         $this->authCookieManager->setTokenCookie($response, $jwt);
-
         return $response;
     }
 }
