@@ -23,5 +23,5 @@ interface ActivityRepositoryInterface
     /**
      * @return Activity[]
      */
-    public function findByActivitiesInWeek(UserId $userId, DateTimeImmutable $firstDateOfWeek): array;
+    public function findByActivitiesInWeek(UserId $userId, DateTimeImmutable $firstDayOfWeek): array;
 }

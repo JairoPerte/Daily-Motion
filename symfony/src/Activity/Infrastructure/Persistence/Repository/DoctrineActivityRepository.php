@@ -46,14 +46,48 @@ class DoctrineActivityRepository implements ActivityRepositoryInterface
      */
     public function findByActivitiesInDay(UserId $userId, DateTimeImmutable $date): array
     {
-        return [];
+        $startOfDay = $date->setTime(0, 0, 0);
+        $endOfDay = $date->setTime(23, 59, 59);
+
+        $doctrineActivities = $this->em->getRepository(DoctrineActivity::class)
+            ->createQueryBuilder("a")
+            ->select("a")
+            ->where("a.userId = :userId")
+            ->andWhere("a.startedAt BETWEEN :startOfDay AND :endOfDay")
+            ->setParameter("userId", $userId)
+            ->setParameter("startOfDay", $startOfDay)
+            ->setParameter("endOfDay", $endOfDay)
+            ->getQuery()
+            ->getResult();
+
+        return array_map(
+            fn(DoctrineActivity $doctrineActivity): Activity => $this->mapper->toDomain($doctrineActivity),
+            $doctrineActivities
+        );
     }
 
     /**
      * @return Activity[]
      */
-    public function findByActivitiesInWeek(UserId $userId, DateTimeImmutable $firstDateOfWeek): array
+    public function findByActivitiesInWeek(UserId $userId, DateTimeImmutable $firstDayOfWeek): array
     {
-        return [];
+        $startOfWeek = $firstDayOfWeek->setTime(0, 0, 0);
+        $endOfWeek = $firstDayOfWeek->modify('+6 days')->setTime(23, 59, 59);
+
+        $doctrineActivities = $this->em->getRepository(DoctrineActivity::class)
+            ->createQueryBuilder("a")
+            ->select("a")
+            ->where("a.userId = :userId")
+            ->andWhere("a.startedAt BETWEEN :startOfWeek AND :endOfWeek")
+            ->setParameter("userId", $userId)
+            ->setParameter("startOfWeek", $startOfWeek)
+            ->setParameter("endOfWeek", $endOfWeek)
+            ->getQuery()
+            ->getResult();
+
+        return array_map(
+            fn(DoctrineActivity $doctrineActivity): Activity => $this->mapper->toDomain($doctrineActivity),
+            $doctrineActivities
+        );
     }
 }
