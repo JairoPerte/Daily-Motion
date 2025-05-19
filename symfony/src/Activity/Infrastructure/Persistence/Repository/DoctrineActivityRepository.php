@@ -2,11 +2,13 @@
 
 namespace App\Activity\Infrastructure\Persistence\Repository;
 
+use App\Activity\Domain\Criteria\ActivityCriteria;
 use DateTimeImmutable;
 use App\User\Domain\ValueObject\UserId;
 use App\Activity\Domain\Entity\Activity;
 use App\Activity\Domain\ValueObject\ActivityId;
 use App\Activity\Domain\Repository\ActivityRepositoryInterface;
+use App\Activity\Domain\ValueObject\ActivityPeriodTime;
 use App\Activity\Infrastructure\Persistence\Entity\DoctrineActivity;
 use App\Activity\Infrastructure\Persistence\Mapper\ActivityMapper;
 use Doctrine\ORM\EntityManagerInterface;
@@ -44,46 +46,44 @@ class DoctrineActivityRepository implements ActivityRepositoryInterface
     /**
      * @return Activity[]
      */
-    public function findByActivitiesInDay(UserId $userId, DateTimeImmutable $date): array
+    public function findByActivitiesByPeriodCriteria(ActivityCriteria $criteria, UserId $userId, DateTimeImmutable $date, ActivityPeriodTime $period): array
     {
-        $startOfDay = $date->setTime(0, 0, 0);
-        $endOfDay = $date->setTime(23, 59, 59);
+        $startDate = $date->setTime(0, 0, 0);
 
-        $doctrineActivities = $this->em->getRepository(DoctrineActivity::class)
+        $endOfDate = $date->setTime(23, 59, 59);
+
+        if ($period->isWeek()) {
+            $endOfDate = $endOfDate->modify("+6 days");
+        }
+
+        if ($period->isMonth()) {
+            $endOfDate = $endOfDate->modify("+1 month -1 day");
+        }
+
+        $queryBuilder = $this->em->getRepository(DoctrineActivity::class)
             ->createQueryBuilder("a")
             ->select("a")
             ->where("a.userId = :userId")
-            ->andWhere("a.startedAt BETWEEN :startOfDay AND :endOfDay")
+            ->andWhere("a.startedAt BETWEEN :startDate AND :endOfDate")
             ->setParameter("userId", $userId)
-            ->setParameter("startOfDay", $startOfDay)
-            ->setParameter("endOfDay", $endOfDay)
-            ->getQuery()
-            ->getResult();
+            ->setParameter("startDate", $startDate)
+            ->setParameter("endOfDate", $endOfDate);
 
-        return array_map(
-            fn(DoctrineActivity $doctrineActivity): Activity => $this->mapper->toDomain($doctrineActivity),
-            $doctrineActivities
-        );
-    }
+        if ($criteria->name) {
+            $queryBuilder->andWhere("name LIKE :name")
+                ->setParameter("name", '%' . $criteria->name . '%');
+        }
 
-    /**
-     * @return Activity[]
-     */
-    public function findByActivitiesInWeek(UserId $userId, DateTimeImmutable $firstDayOfWeek): array
-    {
-        $startOfWeek = $firstDayOfWeek->setTime(0, 0, 0);
-        $endOfWeek = $firstDayOfWeek->modify('+6 days')->setTime(23, 59, 59);
+        if ($criteria->categoryId) {
+            $queryBuilder->andWhere("categoryId LIKE :categoryId")
+                ->setParameter("categoryId", '%' . $criteria->categoryId . '%');
+        }
 
-        $doctrineActivities = $this->em->getRepository(DoctrineActivity::class)
-            ->createQueryBuilder("a")
-            ->select("a")
-            ->where("a.userId = :userId")
-            ->andWhere("a.startedAt BETWEEN :startOfWeek AND :endOfWeek")
-            ->setParameter("userId", $userId)
-            ->setParameter("startOfWeek", $startOfWeek)
-            ->setParameter("endOfWeek", $endOfWeek)
-            ->getQuery()
-            ->getResult();
+        $doctrineActivities = $queryBuilder->getQuery()->getResult();
+
+        if (!$doctrineActivities) {
+            return [];
+        }
 
         return array_map(
             fn(DoctrineActivity $doctrineActivity): Activity => $this->mapper->toDomain($doctrineActivity),

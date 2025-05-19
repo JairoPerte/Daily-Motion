@@ -2,10 +2,12 @@
 
 namespace App\Activity\Domain\Repository;
 
+use DateTimeImmutable;
 use App\User\Domain\ValueObject\UserId;
 use App\Activity\Domain\Entity\Activity;
 use App\Activity\Domain\ValueObject\ActivityId;
-use DateTimeImmutable;
+use App\Activity\Domain\Criteria\ActivityCriteria;
+use App\Activity\Domain\ValueObject\ActivityPeriodTime;
 
 interface ActivityRepositoryInterface
 {
@@ -18,10 +20,5 @@ interface ActivityRepositoryInterface
     /**
      * @return Activity[]
      */
-    public function findByActivitiesInDay(UserId $userId, DateTimeImmutable $date): array;
-
-    /**
-     * @return Activity[]
-     */
-    public function findByActivitiesInWeek(UserId $userId, DateTimeImmutable $firstDayOfWeek): array;
+    public function findByActivitiesByPeriodCriteria(ActivityCriteria $criteria, UserId $userId, DateTimeImmutable $startDate, ActivityPeriodTime $period): array;
 }
