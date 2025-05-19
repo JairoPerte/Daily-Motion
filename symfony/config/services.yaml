@@ -28,4 +28,7 @@ services:
     App\Authentication\Infrastructure\Listener\JwtRequestListener:
         tags:
             - { name: kernel.event_listener, event: kernel.request, method: onKernelRequest, priority: 8 }
+    App\Shared\Infrastructure\Listener\OnKernelException:
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
     # please note that last definitions always *replace* previous ones

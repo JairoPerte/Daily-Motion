@@ -41,7 +41,7 @@ class UserMapper
         $doctrineUser->id = $user->getId()->getUuid();
         $doctrineUser->name = $user->getUserName()->getString();
         $doctrineUser->usertag = $user->getUserTag()->getString();
-        $doctrineUser->password = $user->getPassword()->getPassword();
+        $doctrineUser->password = $user->getPassword()->getString();
         $doctrineUser->img = $user->getImg()->getString();
         $doctrineUser->email = $user->getEmail()->getString();
         $doctrineUser->emailVerified = $user->getEmail()->isVerified();

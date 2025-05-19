@@ -2,6 +2,7 @@
 
 namespace App\Authentication\Application\UseCase\VerifyEmail;
 
+use App\Authentication\Domain\Exception\EmailAlreadyVerifiedException;
 use App\User\Domain\ValueObject\UserId;
 use App\User\Domain\Repository\UserRepositoryInterface;
 
@@ -11,17 +12,17 @@ class VerifyEmailHandler
         private UserRepositoryInterface $userRepository
     ) {}
 
-    /**
-     * @throws \App\User\Domain\Exception\EmailCodeNotValidException
-     */
     public function __invoke(VerifyEmailCommand $command): void
     {
-        $user = $command->user;
+        $user = $this->userRepository->findById(new UserId($command->userId));
+
         if (!$user->getEmail()->isVerified()) {
             $user->getEmail()->checkEmailCode($command->code);
             $user->getEmail()->verify();
 
             $this->userRepository->save($user);
+        } else {
+            throw new EmailAlreadyVerifiedException();
         }
     }
 }

@@ -12,4 +12,9 @@ class UserTag
     {
         return $this->userTag;
     }
+
+    public function isValid(): bool
+    {
+        return $this->userTag >= 3 && $this->userTag <= 20;
+    }
 }

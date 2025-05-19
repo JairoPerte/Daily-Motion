@@ -7,7 +7,6 @@ use App\Category\Application\UseCase\CreateCategory\CreateCategoryCommand;
 use App\Category\Application\UseCase\CreateCategory\CreateCategoryHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -23,7 +22,7 @@ class CreateCategoryController extends AbstractController
         #[MapRequestPayload] CreateCategoryRequest $request
     ): JsonResponse {
         $command = new CreateCategoryCommand(
-            userId: $this->authContext->getUser()->getId()->getUuid(),
+            userId: $this->authContext->getUserId(),
             iconNumber: $request->iconNumber,
             name: $request->name
         );
@@ -32,10 +31,10 @@ class CreateCategoryController extends AbstractController
 
         $response = new CreateCategoryResponse(
             id: $category->getId()->getUuid(),
-            iconNumber: $category->getIconNumber()->getIconNumber(),
-            name: $category->getName()->getName()
+            iconNumber: $category->getIconNumber()->getInteger(),
+            name: $category->getName()->getString()
         );
 
-        return $this->json($response);
+        return $this->json($response, 201);
     }
 }

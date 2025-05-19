@@ -1,4 +1,4 @@
-FROM php:8.2-fpm
+FROM php:8.2.12-fpm
 
 # Establecer directorio de trabajo
 WORKDIR /var/www/html

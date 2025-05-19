@@ -16,7 +16,7 @@ class MailjetMailer implements AppMailerInterface
     public function __construct(private MailerInterface $mailer) {}
 
     /**
-     * @throws MailException
+     * @throws \App\Shared\Domain\Exception\MailException
      */
     public function sendEmailCode(UserEmail $userEmail): void
     {
@@ -35,7 +35,7 @@ class MailjetMailer implements AppMailerInterface
     }
 
     /**
-     * @throws MailException
+     * @throws \App\Shared\Domain\Exception\MailException
      */
     public function sendLogInEmail(UserEmail $userEmail, Session $session): void
     {
@@ -47,6 +47,26 @@ class MailjetMailer implements AppMailerInterface
                 ->subject('A new Login From Your Account')
                 ->text('There is a new Login in your account')
                 ->html("<p>Login at: {$now->format('Y-m-d H:i:s')}</p><p>Device: {$session->getSessionUserAgent()->getString()}</p>");
+
+            $this->mailer->send($email);
+        } catch (Throwable $e) {
+            throw new MailException("Ha habido un error al enviar el mail");
+        }
+    }
+
+    /**
+     * @throws \App\Shared\Domain\Exception\MailException
+     */
+    public function sendFriendRequest(UserEmail $userEmail): void
+    {
+        try {
+            $now = new DateTimeImmutable();
+            $email = (new Email())
+                ->from('daily.motion.app.contact@gmail.com')
+                ->to($userEmail->getString())
+                ->subject('You have a new Friend Request')
+                ->text('There is a new Friend Request')
+                ->html("<p>You have a new Friend Request accept it or deny it</p>");
 
             $this->mailer->send($email);
         } catch (Throwable $e) {

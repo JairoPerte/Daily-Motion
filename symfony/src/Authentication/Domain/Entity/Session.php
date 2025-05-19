@@ -2,6 +2,7 @@
 
 namespace App\Authentication\Domain\Entity;
 
+use App\Authentication\Domain\Exception\SessionClosedException;
 use App\Authentication\Domain\Exception\SessionNotValidException;
 use App\User\Domain\ValueObject\UserId;
 use App\Authentication\Domain\ValueObject\SessionId;
@@ -55,15 +56,15 @@ class Session
     }
 
     /**
-     * @throws SessionNotValidException
+     * @throws \App\Authentication\Domain\Exception\SessionClosedException
      */
     public function isActive(): void
     {
         if ($this->sessionTimeStamp->isExpired()) {
-            throw new SessionNotValidException("La sesión ha caducado, cada mes se reinicia la sesión por seguridad.");
+            throw new SessionClosedException("The session has expired, every month you need to login again for security measures.");
         }
         if ($this->sessionRevoked->isRevoked()) {
-            throw new SessionNotValidException("Se ha cerrado sesión desde otro dispositivo.");
+            throw new SessionClosedException("Someone has closed your session from another device.");
         }
     }
 

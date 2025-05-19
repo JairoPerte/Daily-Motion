@@ -12,10 +12,12 @@ use Doctrine\DBAL\Types\Types;
 class DoctrineFriend
 {
     #[ORM\Id]
+    #[ORM\Column(type: Types::STRING, name: "id")]
+    public string $id;
+
     #[ORM\Column(type: Types::STRING, name: "sender_id")]
     public string $senderId;
 
-    #[ORM\Id]
     #[ORM\Column(type: Types::STRING, name: "receiver_id")]
     public string $receiverId;
 
@@ -23,5 +25,5 @@ class DoctrineFriend
     public bool $pending;
 
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, name: "accepted_at")]
-    public DateTimeImmutable $acceptedAt;
+    public ?DateTimeImmutable $acceptedAt;
 }

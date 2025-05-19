@@ -2,6 +2,7 @@
 
 namespace App\Category\Infrastructure\Controller\UpdateCategory;
 
+use App\Authentication\Infrastructure\Context\AuthContext;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
@@ -13,7 +14,8 @@ use App\Category\Infrastructure\Controller\UpdateCategory\UpdateCategoryResponse
 class UpdateCategoryController extends AbstractController
 {
     public function __construct(
-        private UpdateCategoryHandler $handler
+        private UpdateCategoryHandler $handler,
+        private AuthContext $authContext
     ) {}
 
     #[Route(path: "/api/category/{id}", name: "api_category_update", methods: ["PUT"])]
@@ -24,24 +26,17 @@ class UpdateCategoryController extends AbstractController
         $command = new UpdateCategoryCommand(
             id: $id,
             name: $request->name,
-            iconNumber: $request->iconNumber
+            iconNumber: $request->iconNumber,
+            userId: $this->authContext->getUserId()
         );
 
         $category = ($this->handler)($command);
 
-        if ($category) {
-            $response = new UpdateCategoryResponse(
-                id: $category->getId()->getUuid(),
-                userId: $category->getUserId()->getUuid(),
-                iconNumber: $category->getName()->getName(),
-                name: $category->getName()->getName()
-            );
-            return $this->json($response);
-        } else {
-            return $this->json(
-                ["No existe una categoría con el id: $id"],
-                404
-            );
-        }
+        $response = new UpdateCategoryResponse(
+            id: $category->getId()->getUuid(),
+            iconNumber: $category->getName()->getString(),
+            name: $category->getName()->getString()
+        );
+        return $this->json($response, 201);
     }
 }

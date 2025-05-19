@@ -29,8 +29,8 @@ class CategoryMapper
 
         $doctrineCategory->id = $category->getId()->getUuid();
         $doctrineCategory->userId = $category->getUserId()->getUuid();
-        $doctrineCategory->name = $category->getName()->getName();
-        $doctrineCategory->iconNumber = $category->getIconNumber()->getIconNumber();
+        $doctrineCategory->name = $category->getName()->getString();
+        $doctrineCategory->iconNumber = $category->getIconNumber()->getInteger();
 
         return $doctrineCategory;
     }

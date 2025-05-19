@@ -10,13 +10,13 @@ class AuthContext
 {
     public function __construct(private RequestStack $requestStack) {}
 
-    public function getUser(): User
+    public function getUserId(): string
     {
-        return $this->requestStack->getCurrentRequest()->attributes->get('user');
+        return $this->requestStack->getCurrentRequest()->attributes->get('userId');
     }
 
-    public function getSession(): Session
+    public function getSessionId(): string
     {
-        return $this->requestStack->getCurrentRequest()->attributes->get('session');
+        return $this->requestStack->getCurrentRequest()->attributes->get('sessionId');
     }
 }

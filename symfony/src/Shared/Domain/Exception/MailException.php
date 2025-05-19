@@ -2,6 +2,4 @@
 
 namespace App\Shared\Domain\Exception;
 
-use Exception;
-
-class MailException extends Exception {}
+class MailException extends DailyMotionException {}

@@ -6,8 +6,11 @@ use App\Authentication\Domain\Entity\Session;
 use App\Authentication\Domain\ValueObject\SessionUserAgent;
 use App\Shared\Infrastructure\Uuid\UuidGenerator;
 use App\Authentication\Domain\ValueObject\SessionId;
+use App\User\Domain\Exception\UserNotFoundException;
+use App\User\Domain\Exception\WrongPasswordException;
 use App\User\Domain\Repository\UserRepositoryInterface;
 use App\Authentication\Application\Service\Email\SendEmailLogIn;
+use App\Authentication\Application\Service\Security\PasswordHasher;
 use App\Authentication\Domain\Repository\SessionRepositoryInterface;
 use App\Authentication\Domain\Security\JwtTokenManagerInterface;
 
@@ -18,14 +21,24 @@ class LogInHandler
         private UserRepositoryInterface $userRepository,
         private SendEmailLogIn $sendEmailLogIn,
         private UuidGenerator $uuidGenerator,
-        private JwtTokenManagerInterface $jwtTokenManager
+        private JwtTokenManagerInterface $jwtTokenManager,
+        private PasswordHasher $passwordHasher
     ) {}
 
-    public function __invoke(LogInCommand $command): ?string
+    /**
+     * @throws \App\User\Domain\Exception\UserNotFoundException
+     */
+    public function __invoke(LogInCommand $command): string
     {
         $user = $this->userRepository->findByEmail($command->email);
+
         if ($user) {
-            if ($user->getPassword()->verifyPassword($command->password)) {
+            if (
+                $this->passwordHasher->verifyPassword(
+                    $command->password,
+                    $user->getPassword()->getString()
+                )
+            ) {
                 $session = Session::create(
                     sessionId: new SessionId($this->uuidGenerator->generate()),
                     userId: $user->getId(),
@@ -36,7 +49,8 @@ class LogInHandler
                 $jwt = $this->jwtTokenManager->createToken($user->getId(), $session->getId());
                 return $jwt;
             }
+            throw new WrongPasswordException();
         }
-        return null;
+        throw new UserNotFoundException();
     }
 }

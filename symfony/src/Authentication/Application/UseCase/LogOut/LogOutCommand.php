@@ -7,6 +7,6 @@ use App\Authentication\Domain\Entity\Session;
 class LogOutCommand
 {
     public function __construct(
-        public readonly Session $session
+        public readonly string $sessionId
     ) {}
 }

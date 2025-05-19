@@ -3,6 +3,7 @@
 namespace App\Category\Infrastructure\Controller\GetCategory;
 
 use App\Authentication\Infrastructure\Context\AuthContext;
+use App\Category\Application\UseCase\GetCategory\GetCategoryCommand;
 use App\Category\Application\UseCase\GetCategory\GetCategoryHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -19,19 +20,18 @@ class GetCategoryController extends AbstractController
     public function index(
         string $id
     ): JsonResponse {
-        $categoria = ($this->handler)($id);
-        if ($categoria) {
-            $response = new GetCategoryResponse(
-                id: $categoria->getId()->getUuid(),
-                iconNumber: $categoria->getIconNumber()->getIconNumber(),
-                name: $categoria->getName()->getName()
-            );
-            return $this->json($response);
-        } else {
-            return $this->json(
-                ["No existe una categoría con el id: $id"],
-                404
-            );
-        }
+        $command = new GetCategoryCommand(
+            $id,
+            $this->authContext->getUserId()
+        );
+
+        $categoria = ($this->handler)($command);
+
+        $response = new GetCategoryResponse(
+            id: $categoria->getId()->getUuid(),
+            iconNumber: $categoria->getIconNumber()->getInteger(),
+            name: $categoria->getName()->getString()
+        );
+        return $this->json($response, 200);
     }
 }

@@ -3,12 +3,14 @@
 namespace App\Category\Infrastructure\Persistence\Repository;
 
 use App\Category\Domain\Entity\Category;
+use App\Category\Domain\Exception\CategoryNotFoundException;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Category\Domain\ValueObject\CategoryId;
 use App\Category\Domain\Criteria\CategoryCriteria;
 use App\Category\Domain\Repository\CategoryRepositoryInterface;
 use App\Category\Infrastructure\Persistence\Entity\DoctrineCategory;
 use App\Category\Infrastructure\Persistence\Mapper\CategoryMapper;
+use App\User\Domain\ValueObject\UserId;
 
 class DoctrineCategoryRepository implements CategoryRepositoryInterface
 {
@@ -20,16 +22,19 @@ class DoctrineCategoryRepository implements CategoryRepositoryInterface
     public function findById(CategoryId $id): ?Category
     {
         $doctrineCategory = $this->em->getRepository(DoctrineCategory::class)->find($id->getUuid());
-        if (!$doctrineCategory) {
-            return null;
+        if ($doctrineCategory) {
+            return $this->mapper->toDomain($doctrineCategory);
         }
-        return $this->mapper->toDomain($doctrineCategory);
+        return null;
     }
 
-    public function findByCriteriaPaginated(CategoryCriteria $criteria): ?array
+    /**
+     * @return Category[]
+     */
+    public function findByCriteriaPaginated(CategoryCriteria $criteria, UserId $userId, int $page, int $limit): array
     {
-        if ($criteria->page <= 0) {
-            return null;
+        if ($page <= 0) {
+            return [];
         }
 
         $qb = $this->em->createQueryBuilder();
@@ -38,9 +43,9 @@ class DoctrineCategoryRepository implements CategoryRepositoryInterface
             ->orderBy('c.iconNumber', 'ASC')
             ->addOrderBy('c.name', 'ASC')
             ->andWhere('c.userId = :userId')
-            ->setParameter('userId', $criteria->userId)
-            ->setFirstResult(($criteria->page - 1) * 10)
-            ->setMaxResults(10);
+            ->setParameter('userId', $userId->getUuid())
+            ->setFirstResult(($page - 1) * $limit)
+            ->setMaxResults($limit);
 
         if ($criteria->name) {
             $qb->andWhere('c.name LIKE :name')
@@ -55,7 +60,7 @@ class DoctrineCategoryRepository implements CategoryRepositoryInterface
         $doctrineCategories = $qb->getQuery()->getResult();
 
         if (!$doctrineCategories) {
-            return null;
+            return [];
         }
 
         return array_map(
@@ -71,12 +76,10 @@ class DoctrineCategoryRepository implements CategoryRepositoryInterface
         $this->em->flush();
     }
 
-    public function delete(Category $category): void
+    public function delete(CategoryId $categoryId): void
     {
-        $doctrineCategory = $this->em->getRepository(DoctrineCategory::class)->find($category->getId()->getUuid());
-        if ($doctrineCategory) {
-            $this->em->remove($doctrineCategory);
-            $this->em->flush();
-        }
+        $doctrineCategory = $this->em->getRepository(DoctrineCategory::class)->find($categoryId->getUuid());
+        $this->em->remove($doctrineCategory);
+        $this->em->flush();
     }
 }

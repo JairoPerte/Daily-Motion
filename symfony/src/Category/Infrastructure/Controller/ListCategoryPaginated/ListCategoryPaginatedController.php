@@ -26,28 +26,21 @@ class ListCategoryPaginatedController extends AbstractController
             iconNumber: $query->iconNumber,
             name: $query->name,
             page: $query->page,
-            userId: $this->authContext->getUser()->getId()->getUuid()
+            limit: $query->limit,
+            userId: $this->authContext->getUserId()
         );
 
         $categories = ($this->handler)($command);
 
-        if ($categories) {
-            $response = array_map(
-                fn(Category $category): ListCategoryPaginatedResponse =>
-                new ListCategoryPaginatedResponse(
-                    id: $category->getId()->getUuid(),
-                    iconNumber: $category->getUserId()->getUuid(),
-                    name: $category->getIconNumber()->getIconNumber(),
-                ),
-                $categories
-            );
-
-            return $this->json($response);
-        } else {
-            return $this->json(
-                ["message" => "No hay datos para esa página"],
-                404
-            );
-        }
+        $response = array_map(
+            fn(Category $category): ListCategoryPaginatedResponse =>
+            new ListCategoryPaginatedResponse(
+                id: $category->getId()->getUuid(),
+                iconNumber: $category->getUserId()->getUuid(),
+                name: $category->getIconNumber()->getInteger(),
+            ),
+            $categories
+        );
+        return $this->json($response, 200);
     }
 }

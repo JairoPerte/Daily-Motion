@@ -2,10 +2,9 @@
 
 namespace App\User\Domain\ValueObject;
 
-use App\User\Domain\Exception\EmailCodeNotValidException;
-use LogicException;
+use App\Shared\Domain\Exception\LogicDailyMotionException;
 use DateTimeImmutable;
-use Symfony\Component\Console\Exception\InvalidArgumentException;
+use App\User\Domain\Exception\EmailCodeNotValidatedException;
 
 class UserEmail
 {
@@ -15,16 +14,8 @@ class UserEmail
         private ?DateTimeImmutable $verifiedAt,
         private string $emailCode
     ) {
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            throw new InvalidArgumentException("Email mal formateado");
-        }
-
-        if (strlen($email) != 4) {
-            throw new InvalidArgumentException("El Código de email debe de tener 4 caracteres");
-        }
-
         if ($this->verified && $this->verifiedAt === null) {
-            throw new LogicException("Si está verificado debería tener una fecha de verificación");
+            throw new LogicDailyMotionException("There is no verified at but he is verified, Bad Account");
         }
     }
 
@@ -41,7 +32,7 @@ class UserEmail
     private static function generateCode(): string
     {
         return str_pad(
-            rand(1000, 9999),
+            rand(1, 9999),
             4,
             '0',
             STR_PAD_LEFT
@@ -49,12 +40,12 @@ class UserEmail
     }
 
     /**
-     * @throws \App\User\Domain\Exception\EmailCodeNotValidException
+     * @throws EmailCodeNotValidatedException
      */
     public function checkEmailCode(string $emailCode): void
     {
         if ($emailCode != $this->emailCode) {
-            throw new EmailCodeNotValidException("El código introducido es erróneo");
+            throw new EmailCodeNotValidatedException();
         }
     }
 
@@ -79,6 +70,11 @@ class UserEmail
         );
     }
 
+    public function isValid(): bool
+    {
+        return filter_var($this->email, FILTER_VALIDATE_EMAIL) && $this->email <= 255 && $this->email >= 6;
+    }
+
     public function getString(): string
     {
         return $this->email;
@@ -89,7 +85,7 @@ class UserEmail
         return $this->verified;
     }
 
-    public function getVerifiedAt(): DateTimeImmutable
+    public function getVerifiedAt(): ?DateTimeImmutable
     {
         return $this->verifiedAt;
     }
