@@ -1,0 +1,7 @@
+# No se sube el override (recomendable para poner variables en local o poner los certs)
+compose.override.yaml
+
+# Un ejemplo de los certs: 
+# proxy:
+#     volumes:
+#       - ./certs:/etc/nginx/certs:ro

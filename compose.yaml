@@ -16,12 +16,12 @@ services:
 
   proxy:
     image: nginx:1.25-alpine
+    restart: unless-stopped
     ports:
       - "80:80"
       - "443:443"
     volumes:
       - ./proxy/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./certs:/etc/nginx/certs:ro
     depends_on:
       - api
       - app
@@ -29,8 +29,6 @@ services:
 
   app:
     build: ./app
-    volumes:
-      - react_build:/usr/share/nginx/html:ro
 
   media:
     image: nginx:1.25-alpine
@@ -40,18 +38,11 @@ services:
 
   api:
     build: ./api
-    # environment:
-    #   - DB_HOST=database
-    #   - DB_USER=${POSTGRES_USER}
-    #   - DB_PASS=${POSTGRES_PASSWORD}
-    #   - DB_NAME=${POSTGRES_DB}
     volumes:
-      - ./api:/var/www/html
       - uploads_data:/var/www/html/public/uploads
     depends_on:
       - database
 
 volumes:
-  react_build:
   uploads_data:
   database_data:
