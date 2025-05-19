@@ -50,6 +50,14 @@ class Activity
         );
     }
 
+    public function update(
+        CategoryId $categoryId,
+        ActivityName $activityName
+    ): void {
+        $this->activityName = $activityName;
+        $this->categoryId = $categoryId;
+    }
+
     public function getActivityId(): ActivityId
     {
         return $this->activityId;
