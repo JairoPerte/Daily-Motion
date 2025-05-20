@@ -1,0 +1,3 @@
+/* MIRAR COMO FUNCIONA Y COMO PONER TAILWIND CSS */
+@import "tailwindcss/preflight";
+@tailwind utilities;
