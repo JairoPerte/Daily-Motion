@@ -18,7 +18,7 @@ class GetPeriodActivitiesController extends AbstractController
         private GetPeriodActivitiesHandler $handler
     ) {}
 
-    #[Route(path: "/api/activity/week", name: "api_activity_week", methods: ["GET"])]
+    #[Route(path: "/v1/activity/week", name: "v1_activity_week", methods: ["GET"])]
     public function index(
         #[MapQueryString] GetPeriodActivitiesQuery $query
     ): JsonResponse {

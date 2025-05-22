@@ -3,6 +3,7 @@
 namespace App\Shared\Infrastructure\Listener;
 
 use App\Authentication\Domain\Exception\JwtNotValidException;
+use App\Shared\Domain\Exception\DailyMotionException;
 use Throwable;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpKernel\Event\ExceptionEvent;
@@ -20,9 +21,8 @@ class OnKernelException
 
         // Forma del mensaje de error:
         $data = [];
-        $data["error"] = end(explode('\\', get_class($throwable)));
+        $data["error"] = get_class($throwable);
         $data["message"] = $throwable->getMessage();
-
         $fields = $this->getFields($throwable);
         if ($fields) {
             $data["fields"] = $fields;
@@ -44,8 +44,8 @@ class OnKernelException
 
     private function getCode(Throwable $exception): int
     {
-        if ($exception->httpCode) {
-            return $exception->httpCode;
+        if ($exception instanceof DailyMotionException) {
+            return $exception->getHttpCode();
         }
         return 500;
     }

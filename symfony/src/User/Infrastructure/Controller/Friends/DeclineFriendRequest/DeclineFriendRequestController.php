@@ -16,7 +16,7 @@ class DeclineFriendRequestController extends AbstractController
         private DeclineFriendRequestHandler $handler
     ) {}
 
-    #[Route(path: "/api/user/friends/decline/{usertag}", name: "api_user_friends_decline", methods: ["DELETE"])]
+    #[Route(path: "/v1/user/friends/decline/{usertag}", name: "v1_user_friends_decline", methods: ["DELETE"])]
     public function index(
         string $usertag
     ): JsonResponse {

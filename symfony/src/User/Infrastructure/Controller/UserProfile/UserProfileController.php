@@ -16,7 +16,7 @@ class UserProfileController extends AbstractController
         private AuthContext $authContext
     ) {}
 
-    #[Route(path: "/api/user/{usertag}", name: "api_user_profile", methods: ["GET"])]
+    #[Route(path: "/v1/user/{usertag}", name: "v1_user_profile", methods: ["GET"])]
     public function index(
         string $usertag
     ): JsonResponse {

@@ -19,7 +19,7 @@ class RegisterController extends AbstractController
         private AuthCookieManager $authCookieManager
     ) {}
 
-    #[Route(path: "/api/auth/register", name: "api_auth_register", methods: ["POST"])]
+    #[Route(path: "/v1/auth/register", name: "v1_auth_register", methods: ["POST"])]
     public function index(
         #[MapRequestPayload] RegisterRequest $request
     ): JsonResponse {

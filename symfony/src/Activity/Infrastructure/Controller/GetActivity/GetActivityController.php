@@ -16,7 +16,7 @@ class GetActivityController extends AbstractController
         private AuthContext $authContext
     ) {}
 
-    #[Route(path: "/api/activity/{id}", name: "api_activity_get", methods: ["GET"])]
+    #[Route(path: "/v1/activity/{id}", name: "v1_activity_get", methods: ["GET"])]
     public function index(
         string $id
     ): JsonResponse {

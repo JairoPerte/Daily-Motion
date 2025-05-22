@@ -16,7 +16,7 @@ class DeleteCategoryController extends AbstractController
         private AuthContext $authContext
     ) {}
 
-    #[Route(path: "/api/category/{id}", name: "api_category_delete", methods: ["DELETE"])]
+    #[Route(path: "/v1/category/{id}", name: "v1_category_delete", methods: ["DELETE"])]
     public function index(
         string $id
     ): JsonResponse {

@@ -16,7 +16,7 @@ class SendFriendRequestController extends AbstractController
         private AuthContext $authContext
     ) {}
 
-    #[Route(path: "/api/user/friends/send/{usertag}", name: "api_user_friends_send", methods: ["POST"])]
+    #[Route(path: "/v1/user/friends/send/{usertag}", name: "v1_user_friends_send", methods: ["POST"])]
     public function index(
         string $usertag
     ): JsonResponse {

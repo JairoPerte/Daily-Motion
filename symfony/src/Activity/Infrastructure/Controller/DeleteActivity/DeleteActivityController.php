@@ -16,7 +16,7 @@ class DeleteActivityController extends AbstractController
         private AuthContext $authContext
     ) {}
 
-    #[Route(path: "/api/activity/{id}", name: "api_activity_delete", methods: ["DELETE"])]
+    #[Route(path: "/v1/activity/{id}", name: "v1_activity_delete", methods: ["DELETE"])]
     public function index(
         string $id
     ): JsonResponse {

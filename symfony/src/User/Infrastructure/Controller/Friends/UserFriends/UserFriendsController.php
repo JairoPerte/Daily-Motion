@@ -18,7 +18,7 @@ class UserFriendsController extends AbstractController
         private AuthContext $authContext
     ) {}
 
-    #[Route(path: "/api/user/{usertag}/friends", name: "api_user_friends", methods: ["GET"])]
+    #[Route(path: "/v1/user/{usertag}/friends", name: "v1_user_friends", methods: ["GET"])]
     public function index(
         #[MapQueryString] UserFriendsQuery $query,
         string $usertag

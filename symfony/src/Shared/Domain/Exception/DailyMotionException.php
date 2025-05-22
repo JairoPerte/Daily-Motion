@@ -6,11 +6,16 @@ use Exception;
 
 class DailyMotionException extends Exception
 {
-    public readonly int $httpCode;
+    protected int $httpCode;
 
     public function __construct(string $message)
     {
         parent::__construct($message);
         $this->httpCode = 500;
+    }
+
+    public function getHttpCode(): int
+    {
+        return $this->httpCode;
     }
 }

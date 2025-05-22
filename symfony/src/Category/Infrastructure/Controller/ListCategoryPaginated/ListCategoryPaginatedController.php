@@ -18,7 +18,7 @@ class ListCategoryPaginatedController extends AbstractController
         private AuthContext $authContext
     ) {}
 
-    #[Route(path: "/api/category", name: "api_category_listPaginated", methods: ["GET"])]
+    #[Route(path: "/v1/category", name: "v1_category_listPaginated", methods: ["GET"])]
     public function index(
         #[MapQueryString] ListCategoryPaginatedQuery $query
     ): JsonResponse {

@@ -18,7 +18,7 @@ class VerifyEmailController extends AbstractController
         private AuthContext $authContext
     ) {}
 
-    #[Route(path: "/api/auth/verify-email/{code}", name: "api_auth_verify-email", methods: ["POST"])]
+    #[Route(path: "/v1/auth/verify-email/{code}", name: "v1_auth_verify-email", methods: ["POST"])]
     public function index(
         string $code
     ): JsonResponse {

@@ -17,7 +17,7 @@ class UpdateActivityController extends AbstractController
         private AuthContext $authContext
     ) {}
 
-    #[Route(path: "/api/activity/{id}", name: "api_activity_update", methods: ["PUT"])]
+    #[Route(path: "/v1/activity/{id}", name: "v1_activity_update", methods: ["PUT"])]
     public function index(
         #[MapRequestPayload] UpdateActivityRequest $request,
         string $id

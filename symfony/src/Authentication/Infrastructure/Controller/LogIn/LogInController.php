@@ -20,7 +20,7 @@ class LogInController extends AbstractController
         private AuthCookieManager $authCookieManager
     ) {}
 
-    #[Route(path: "/api/auth/login", name: "api_auth_login", methods: ["POST"])]
+    #[Route(path: "/v1/auth/login", name: "v1_auth_login", methods: ["POST"])]
     public function index(
         #[MapRequestPayload()] LogInRequest $request
     ): JsonResponse {

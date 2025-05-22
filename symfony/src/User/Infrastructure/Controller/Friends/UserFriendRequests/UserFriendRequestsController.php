@@ -17,7 +17,7 @@ class UserFriendRequestsController extends AbstractController
         private UserFriendRequestsHandler $handler,
     ) {}
 
-    #[Route(path: "/api/user/friends/requests", name: "api_user_friends_requests", methods: ["GET"])]
+    #[Route(path: "/v1/user/friends/requests", name: "v1_user_friends_requests", methods: ["GET"])]
     public function index(): JsonResponse
     {
         $command = new UserFriendRequestsCommand(

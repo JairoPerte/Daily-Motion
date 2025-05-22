@@ -17,7 +17,7 @@ class CreateCategoryController extends AbstractController
         private AuthContext $authContext
     ) {}
 
-    #[Route(path: '/api/category', name: 'api_category_create', methods: ['POST'])]
+    #[Route(path: '/v1/category', name: 'v1_category_create', methods: ['POST'])]
     public function index(
         #[MapRequestPayload] CreateCategoryRequest $request
     ): JsonResponse {

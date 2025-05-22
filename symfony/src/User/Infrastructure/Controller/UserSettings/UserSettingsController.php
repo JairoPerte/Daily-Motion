@@ -20,7 +20,7 @@ class UserSettingsController extends AbstractController
         private FileContext $fileContext
     ) {}
 
-    #[Route(path: "/api/user/settings", name: "api_user_settings", methods: ["PUT"])]
+    #[Route(path: "/v1/user/settings", name: "v1_user_settings", methods: ["PUT"])]
     public function index(
         #[MapRequestPayload] UserSettingsRequest $request
     ): JsonResponse {

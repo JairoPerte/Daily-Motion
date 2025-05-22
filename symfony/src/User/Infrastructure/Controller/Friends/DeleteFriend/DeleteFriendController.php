@@ -16,7 +16,7 @@ class DeleteFriendController extends AbstractController
         private DeleteFriendHandler $handler
     ) {}
 
-    #[Route(path: "/api/user/friends/delete/{usertag}", name: "api_user_friends_delete", methods: ["DELETE"])]
+    #[Route(path: "/v1/user/friends/delete/{usertag}", name: "v1_user_friends_delete", methods: ["DELETE"])]
     public function index(
         string $usertag
     ): JsonResponse {

@@ -18,7 +18,7 @@ class LogOutController  extends AbstractController
         private AuthCookieManager $cookieManager
     ) {}
 
-    #[Route(path: "/api/auth/logout", name: "api_auth_logout", methods: ["DELETE"])]
+    #[Route(path: "/v1/auth/logout", name: "v1_auth_logout", methods: ["DELETE"])]
     public function index(): JsonResponse
     {
         $command = new  LogOutCommand(

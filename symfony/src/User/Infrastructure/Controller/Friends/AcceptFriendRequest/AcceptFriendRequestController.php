@@ -16,7 +16,7 @@ class AcceptFriendRequestController extends AbstractController
         private AcceptFriendRequestHandler $handler
     ) {}
 
-    #[Route(path: "/api/user/friends/accept/{usertag}", name: "api_user_friends_accept", methods: ["PUT"])]
+    #[Route(path: "/v1/user/friends/accept/{usertag}", name: "v1_user_friends_accept", methods: ["PUT"])]
     public function index(
         string $usertag
     ): JsonResponse {

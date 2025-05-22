@@ -16,7 +16,7 @@ class GetCategoryController extends AbstractController
         private AuthContext $authContext
     ) {}
 
-    #[Route(path: "/api/category/{id}", name: "api_category_get", methods: ["GET"])]
+    #[Route(path: "/v1/category/{id}", name: "v1_category_get", methods: ["GET"])]
     public function index(
         string $id
     ): JsonResponse {

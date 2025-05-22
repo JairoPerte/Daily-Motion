@@ -17,7 +17,7 @@ class CreateActivityController extends AbstractController
         private AuthContext $authContext
     ) {}
 
-    #[Route(path: "/api/activity", name: "api_activity_create", methods: ["POST"])]
+    #[Route(path: "/v1/activity", name: "v1_activity_create", methods: ["POST"])]
     public function index(
         #[MapRequestPayload] CreateActivityRequest $request
     ): JsonResponse {

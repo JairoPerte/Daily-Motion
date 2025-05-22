@@ -18,7 +18,7 @@ class UpdateCategoryController extends AbstractController
         private AuthContext $authContext
     ) {}
 
-    #[Route(path: "/api/category/{id}", name: "api_category_update", methods: ["PUT"])]
+    #[Route(path: "/v1/category/{id}", name: "v1_category_update", methods: ["PUT"])]
     public function index(
         #[MapRequestPayload] UpdateCategoryRequest $request,
         string $id
