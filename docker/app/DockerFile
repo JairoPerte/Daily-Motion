@@ -1,6 +1,6 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
-COPY . .
+COPY ./react .
 RUN npm install && npm run build
 
 FROM nginx:1.25-alpine

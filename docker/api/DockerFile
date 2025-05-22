@@ -1,25 +1,29 @@
 FROM php:8.2.12-fpm
 
-# Establecer directorio de trabajo
-WORKDIR /var/www/html
+COPY ./docker/api/php.ini /usr/local/etc/php/php.ini
+COPY ./docker/api/www.conf /usr/local/etc/php-fpm.d/www.conf
+
+RUN ln -snf /usr/share/zoneinfo/Europe/Madrid /etc/localtime \
+    && echo "Europe/Madrid" > /etc/timezone
 
 # Instalar dependencias del sistema necesarias
-RUN apt-get update && apt-get install -y \
-    git \
-    unzip \
-    libpq-dev \
-    libzip-dev \
-    zip \
-    && docker-php-ext-install pdo pdo_pgsql zip
+RUN apt-get update \
+    && apt-get install -y git acl openssl openssh-client wget zip vim iputils-ping tesseract-ocr tesseract-ocr-spa libtesseract-dev \
+    && apt-get install -y libmagickwand-dev libpng-dev libjpeg-dev zlib1g-dev libzip-dev libxml2-dev libicu-dev libpq-dev librabbitmq-dev libssh-dev \
+    && docker-php-ext-configure gd --enable-gd --with-jpeg \
+    && docker-php-ext-install intl pdo pdo_pgsql zip gd soap bcmath sockets sysvsem \
+    && pecl install xdebug \
+    && pecl install amqp-1.11.0 \
+    && pecl install imagick \
+    && docker-php-ext-enable --ini-name 05-opcache.ini opcache xdebug amqp imagick
 
-# Instalar Composer (última versión estable directamente desde la fuente oficial)
-COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
+# Instalar dependencias PHP con el composer
+RUN curl https://getcomposer.org/composer.phar -o /usr/bin/composer && chmod +x /usr/bin/composer
+RUN composer self-update
 
-# Copiar el código fuente Symfony
-COPY ./symfony ./
+# Preparamos el espacio donde trabajaremos
+RUN mkdir -p /appdata/www
 
-# Instalar dependencias PHP
-RUN composer install --no-dev --optimize-autoloader --no-interaction
+WORKDIR /appdata/www
 
-# Dar permisos correctos
-RUN mkdir -p var/cache var/log && chown -R www-data:www-data var
+CMD ["php-fpm", "-F", "-R"]

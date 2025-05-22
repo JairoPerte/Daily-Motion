@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Category\Domain\Exception;
+namespace App\Activity\Domain\Exception;
 
 use App\Shared\Domain\Exception\DailyMotionException;
 
