@@ -42,8 +42,6 @@ services:
     build:
       context: .
       dockerfile: ./docker/api/DockerFile
-    # ports:
-    #    - "9000:9000"
     volumes:
       - ./symfony:/appdata/www
       - uploads_data:/appdata/www/uploads
