@@ -4,9 +4,7 @@ import { LoginPage } from "@/presentation/pages/LoginPage";
 
 export function AppRoutes() {
   return (
-    <BrowserRouter basename="/app">
-      {" "}
-      {/* CRUCIAL si tu app está montada en /app */}
+    <BrowserRouter>
       <Routes>
         <Route path="/" element={<App />} />
         <Route path="/login" element={<LoginPage />} />

@@ -13,6 +13,8 @@ services:
       - "5432:5432"
     volumes:
       - database_data:/var/lib/postgresql/data
+    networks:
+      - database
 
   proxy:
     image: nginx:1.25-alpine
@@ -26,28 +28,50 @@ services:
       - api
       - app
       - media
+    networks:
+      - proxy
 
   app:
     build:
       context: .
       dockerfile: ./docker/app/DockerFile
+    networks:
+      - proxy
 
   media:
     image: nginx:1.25-alpine
     volumes:
       - ./docker/media/default.conf:/etc/nginx/conf.d/default.conf:ro
       - uploads_data:/usr/share/nginx/html:ro
+    networks:
+      - proxy
 
   api:
+    image: nginx:1.25-alpine
+    volumes:
+      - ./symfony/public/index.php:/appdata/www/public/index.php
+      - ./docker/api/default.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - proxy
+
+  php:
     build:
       context: .
-      dockerfile: ./docker/api/DockerFile
+      dockerfile: ./docker/php/DockerFile
     volumes:
       - ./symfony:/appdata/www
       - uploads_data:/appdata/www/uploads
     depends_on:
+      - api
+      - database
+    networks:
+      - proxy
       - database
 
 volumes:
   uploads_data:
   database_data:
+
+networks:
+  database:
+  proxy:
