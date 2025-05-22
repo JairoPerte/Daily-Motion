@@ -32,9 +32,18 @@ services:
       - proxy
 
   app:
+    image: nginx:1.25-alpine
+    volumes:
+      - ./docker/app/default.conf:/etc/nginx/conf.d/default.conf
+    depends_on:
+      - node
+    networks:
+      - proxy
+
+  node:
     build:
       context: .
-      dockerfile: ./docker/app/DockerFile
+      dockerfile: ./docker/node/Dockerfile
     networks:
       - proxy
 
