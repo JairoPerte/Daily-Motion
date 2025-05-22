@@ -51,7 +51,7 @@ final class Version20250511203709 extends AbstractMigration
         // FRIEND
         $this->addSql(<<<'SQL'
             CREATE TABLE friend (
-                id UUID NOT NULL
+                id UUID NOT NULL,
                 sender_id UUID NOT NULL, 
                 receiver_id UUID NOT NULL, 
                 pending BOOLEAN NOT NULL, 
