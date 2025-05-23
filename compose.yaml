@@ -43,7 +43,7 @@ services:
   node:
     build:
       context: .
-      dockerfile: ./docker/node/Dockerfile
+      dockerfile: ./docker/node/DockerFile
     networks:
       - proxy
 
