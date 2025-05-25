@@ -3,18 +3,18 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background: #f0f2f5;
+  background: #c6f6d5;
 }
 
 .card {
   background: white;
-  padding: 2rem;
+  padding: 2.6rem;
   border-radius: 10px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.249);
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  width: 360px;
+  width: 380px;
 }
 
 .title {
@@ -26,7 +26,7 @@
 
 .input {
   padding: 0.75rem;
-  border: 1px solid #000000;
+  border: 2px solid #000000;
   border-radius: 5px;
   font-size: 1rem;
   outline: none;
@@ -35,6 +35,19 @@
 
 .input:focus {
   border-color: #0078d4;
+}
+
+.bad-input {
+  border: 2px solid #851f1f !important;
+}
+
+.good-input {
+  border: 2px solid #156638 !important;
+}
+
+.error-text {
+  color: #851f1f;
+  margin-left: 1rem;
 }
 
 .button {
@@ -67,4 +80,15 @@
 .link:hover {
   color: #0b5a93;
   text-decoration: underline;
+}
+
+@media (max-width: 500px) {
+  .card {
+    background: #d2f1dc;
+    border-radius: 0px;
+    box-shadow: 0 0 0;
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+  }
 }

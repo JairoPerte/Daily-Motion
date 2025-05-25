@@ -47,7 +47,7 @@ class RegisterHandler
 
         $this->userRepository->save($user);
 
-        $this->sendEmailVerification->sendEmailValidate($user->getEmail());
+        //$this->sendEmailVerification->sendEmailValidate($user->getEmail());
 
         $session = Session::create(
             sessionId: new SessionId($this->uuidGenerator->generate()),

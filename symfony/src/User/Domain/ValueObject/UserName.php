@@ -15,6 +15,6 @@ class UserName
 
     public function isValid(): bool
     {
-        return $this->name < 100 && $this->name > 5;
+        return $this->name <= 100 && $this->name >= 5;
     }
 }
