@@ -1,0 +1,244 @@
+html,
+body {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  height: 100%; /* Ensure html and body take full height */
+}
+
+/* Main Container */
+.main-container {
+  display: flex;
+  min-height: 100vh; /* Full viewport height */
+  align-items: stretch; /* IMPORTANT: Ensures children like right-section stretch to full height */
+  position: relative; /* Needed for absolute positioning of separator and z-index */
+  overflow: hidden; /* Hide anything that spills out */
+  background-color: #f0f2f5; /* Light background for the whole page */
+  padding-bottom: 60px; /* Make space for the fixed footer at the bottom */
+}
+
+/* Left Section - Content Area */
+.left-section {
+  flex: 1;
+  padding: 4rem 6rem;
+  text-align: left;
+  z-index: 3;
+  background-color: #ffffff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  position: relative;
+}
+
+.left-section h1 {
+  font-size: 3.5rem;
+  color: #2c3e50;
+  margin-bottom: 1.5rem;
+  line-height: 1.1;
+}
+
+.left-section p {
+  font-size: 1.3rem;
+  margin-bottom: 2.5rem;
+  line-height: 1.6;
+  color: #555;
+}
+
+.auth-links p {
+  font-size: 1.1rem;
+  margin-bottom: 1rem;
+}
+
+/* Right Section - Image Area */
+.right-section {
+  flex: 1;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1;
+}
+
+.single-collage-image-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* --- Diagonal Line Separator (White Overlay) --- */
+.main-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #ffffff;
+  z-index: 2;
+
+  clip-path: polygon(0 0, 60% 0, 80% 100%, 0% 100%);
+}
+
+/* --- Buttons --- */
+.auth-buttons {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 2rem;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+.btn {
+  display: inline-block;
+  padding: 1rem 2rem;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: bold;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  text-align: center;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.primary-btn {
+  background-color: #6edc5b;
+  color: white;
+  border: 2px solid #6edc5b;
+}
+
+.primary-btn:hover {
+  background-color: #4caf50;
+  border-color: #4caf50;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+  text-decoration: none;
+}
+
+.secondary-btn {
+  background-color: transparent;
+  color: #6edc5b;
+  border: 2px solid #6edc5b;
+}
+
+.secondary-btn:hover {
+  background-color: #4caf50;
+  border: 2px solid #4caf50;
+  color: white;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 15px rgba(76, 175, 80, 0.1);
+}
+
+.auth-links a {
+  color: #4caf50;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+.auth-links a:hover {
+  color: #388e3c;
+  text-decoration: underline;
+}
+
+/* --- Footer Styling --- */
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: transparent;
+  color: #685e5e;
+  text-align: center;
+  padding: 1rem;
+  font-size: 0.9rem;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem;
+  pointer-events: auto;
+}
+
+.footer a {
+  color: #5a4b4b;
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.footer a:hover {
+  color: rgb(63, 54, 54);
+  text-decoration: underline;
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+  .main-container {
+    flex-direction: column;
+    padding-bottom: 0;
+    min-height: auto;
+  }
+
+  .left-section {
+    padding: 3rem 2rem;
+    text-align: center;
+    align-items: center;
+    width: 100%;
+  }
+
+  .left-section h1 {
+    font-size: 2.8rem;
+  }
+
+  .left-section p {
+    font-size: 1.1rem;
+  }
+
+  .right-section {
+    min-height: 400px;
+    width: 100%;
+  }
+
+  /* Remove diagonal cut effect for small screens */
+  .main-container::before {
+    clip-path: none;
+    background-color: transparent;
+  }
+
+  .footer {
+    position: static; /* Footer becomes part of the document flow */
+    background-color: #312929; /* Give it a solid background on mobile */
+    padding: 1rem;
+    gap: 1rem;
+  }
+
+  .footer a {
+    color: white;
+  }
+
+  .footer a:hover {
+    color: white;
+    text-decoration: underline;
+  }
+}
+
+@media (max-width: 576px) {
+  .left-section h1 {
+    font-size: 2.2rem;
+  }
+  .left-section p {
+    font-size: 1rem;
+  }
+
+  .auth-buttons {
+    flex-direction: column; /* Stack buttons on very small screens */
+    width: 100%;
+    align-items: center; /* Center buttons when stacked */
+  }
+
+  .btn {
+    width: 80%; /* Make buttons wider when stacked */
+  }
+}
