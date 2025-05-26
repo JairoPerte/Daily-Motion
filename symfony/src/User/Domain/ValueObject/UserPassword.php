@@ -20,12 +20,9 @@ class UserPassword
 
     public function isValid(): bool
     {
-        if (($this->password > 128 || $this->password < 12)) {
+        if (strlen($this->password) > 128 || strlen($this->password) < 12) {
             return false;
         }
-        if (!preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{12,128}$/', $this->password)) {
-            return false;
-        }
-        return true;
+        return preg_match('/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z\d]).{12,128}$/', $this->password);
     }
 }

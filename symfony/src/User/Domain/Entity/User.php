@@ -11,6 +11,7 @@ use App\User\Domain\ValueObject\UserImg;
 use App\User\Domain\ValueObject\UserName;
 use App\User\Domain\ValueObject\UserPassword;
 use App\User\Domain\ValueObject\UserTag;
+use Symfony\Component\HttpKernel\Log\Logger;
 
 class User
 {

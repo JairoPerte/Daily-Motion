@@ -15,6 +15,6 @@ class UserTag
 
     public function isValid(): bool
     {
-        return $this->userTag >= 3 && $this->userTag <= 20;
+        return strlen($this->userTag) >= 3 && strlen($this->userTag) <= 20;
     }
 }

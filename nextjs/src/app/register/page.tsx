@@ -11,11 +11,13 @@ export default function RegisterPage() {
   const [usertag, setUsertag] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
   const [nameError, setNameError] = useState("");
   const [usertagError, setUsertagError] = useState("");
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [confirmPasswordError, setConfirmPasswordError] = useState("");
   const [generalError, setGeneralError] = useState("");
 
   const passwordRegex =
@@ -23,6 +25,13 @@ export default function RegisterPage() {
 
   const validateFields = () => {
     let valid = true;
+
+    if (password !== confirmPassword) {
+      setConfirmPasswordError("Las contraseñas tienen que coincidir.");
+      valid = false;
+    } else {
+      setConfirmPasswordError("");
+    }
 
     if (name.length < 5 || name.length > 100) {
       setNameError("El nombre debe tener entre 5 y 100 caracteres.");
@@ -63,6 +72,9 @@ export default function RegisterPage() {
 
     if (!validateFields()) return;
 
+    setUsertagError("");
+    setEmailError("");
+
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/auth/register`,
       {
@@ -76,13 +88,32 @@ export default function RegisterPage() {
     if (response.status === 204) {
       router.push("/verify-email");
     } else if (response.status === 400) {
-      setGeneralError("No te saltes mi frontend mamón");
+      setGeneralError("No te saltes mi formulario mamón");
+      const data = await response.json();
+      const fields = data.fields || {};
+
+      if (fields["name"]) {
+        setNameError("El nombre debe tener entre 5 y 100 caracteres.");
+      }
+      if (fields["usertag"]) {
+        setUsertagError("El usuario debe tener entre 3 y 20 caracteres.");
+      }
+      if (fields["email"]) {
+        setEmailError("El correo debe tener entre 6 y 255 caracteres.");
+      }
+      if (fields["password"]) {
+        setPasswordError(
+          "La contraseña debe tener entre 12 y 128 caracteres, incluyendo mayúsculas, minúsculas, números y símbolos."
+        );
+      }
     } else if (response.status === 409) {
       const data = await response.json();
       const fields = data.fields || {};
+
       if (fields["usertag"]) {
         setUsertagError("Este nombre de usuario ya está en uso.");
       }
+
       if (fields["email"]) {
         setEmailError("Este correo electrónico ya está registrado.");
       }
@@ -160,8 +191,27 @@ export default function RegisterPage() {
           onChange={(e) => setPassword(e.target.value)}
           required
         />
+
+        {/* CONFIRM PASSWORD */}
         {password && passwordError && (
           <p className={styles["error-text"]}>{passwordError}</p>
+        )}
+        <input
+          type="password"
+          placeholder="Confirmar Contraseña"
+          value={confirmPassword}
+          className={`${styles.input} ${
+            passwordError
+              ? styles["bad-input"]
+              : password
+              ? styles["good-input"]
+              : ""
+          }`}
+          onChange={(e) => setConfirmPassword(e.target.value)}
+          required
+        />
+        {confirmPassword && confirmPasswordError && (
+          <p className={styles["error-text"]}>{confirmPasswordError}</p>
         )}
 
         {generalError && <p className={styles["error-text"]}>{generalError}</p>}

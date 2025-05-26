@@ -72,7 +72,7 @@ class UserEmail
 
     public function isValid(): bool
     {
-        return filter_var($this->email, FILTER_VALIDATE_EMAIL) && $this->email <= 255 && $this->email >= 6;
+        return filter_var($this->email, FILTER_VALIDATE_EMAIL) && strlen($this->email) <= 255 && strlen($this->email) >= 6;
     }
 
     public function getString(): string

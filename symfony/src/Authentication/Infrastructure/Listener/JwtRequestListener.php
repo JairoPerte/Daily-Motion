@@ -23,7 +23,7 @@ class JwtRequestListener
         $jwt = $request->cookies->get('token');
 
         if (!$jwt) {
-            if (preg_match('#^/api/auth/(login|register)#', $path)) {
+            if (preg_match('#^/v1/auth/(login|register)#', $path)) {
                 return;
             }
             throw new JwtNotFoundException();

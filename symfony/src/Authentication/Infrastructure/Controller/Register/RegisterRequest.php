@@ -8,7 +8,6 @@ class RegisterRequest
         public readonly string $name,
         public readonly string $usertag,
         public readonly string $password,
-        public readonly string $confirmPassword,
         public readonly string $email
     ) {}
 }
