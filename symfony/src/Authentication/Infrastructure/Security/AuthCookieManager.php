@@ -20,7 +20,7 @@ class AuthCookieManager
             Cookie::create('token')
                 ->withValue($jwt)
                 ->withHttpOnly(true)
-                ->withSecure(true)
+                ->withSecure(true) // change when using HTTPS
                 ->withPath('/')
                 ->withExpires(strtotime('+30 days'))
                 ->withSameSite('Strict')

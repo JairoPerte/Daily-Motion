@@ -48,6 +48,8 @@ export default function VerifyEmailPage() {
       }
     );
 
+    console.log(response.json());
+
     if (response.status === 204) {
       router.push("/app");
     } else if (response.status === 401) {

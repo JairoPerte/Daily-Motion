@@ -8,7 +8,7 @@ use App\User\Domain\Exception\EmailCodeNotValidatedException;
 
 class UserEmail
 {
-    private function __construct(
+    public function __construct(
         private readonly string $email,
         private bool $verified,
         private ?DateTimeImmutable $verifiedAt,
