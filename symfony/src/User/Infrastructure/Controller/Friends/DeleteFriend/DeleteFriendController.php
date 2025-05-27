@@ -2,12 +2,13 @@
 
 namespace App\User\Infrastructure\Controller\Friends\DeleteFriend;
 
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Authentication\Infrastructure\Context\AuthContext;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Authentication\Application\Service\Security\SessionValidator;
 use App\User\Application\UseCase\Friends\DeleteFriend\DeleteFriendCommand;
 use App\User\Application\UseCase\Friends\DeleteFriend\DeleteFriendHandler;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Annotation\Route;
 
 class DeleteFriendController extends AbstractController
 {
@@ -22,6 +23,8 @@ class DeleteFriendController extends AbstractController
     ): JsonResponse {
         $command = new DeleteFriendCommand(
             id: $this->authContext->getUserId(),
+            sessionId: $this->authContext->getSessionId(),
+            verified: $this->authContext->isVerified(),
             usertag: $usertag
         );
 

@@ -22,6 +22,8 @@ class AcceptFriendRequestController extends AbstractController
     ): JsonResponse {
         $command = new AcceptFriendRequestCommand(
             id: $this->authContext->getUserId(),
+            sessionId: $this->authContext->getSessionId(),
+            verified: $this->authContext->isVerified(),
             usertag: $usertag
         );
 

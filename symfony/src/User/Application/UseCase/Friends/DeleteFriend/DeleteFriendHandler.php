@@ -8,16 +8,20 @@ use App\User\Domain\Exception\UserNotFoundException;
 use App\User\Domain\Exception\FriendNotFoundException;
 use App\User\Domain\Repository\UserRepositoryInterface;
 use App\User\Domain\Repository\FriendRepositoryInterface;
+use App\Authentication\Application\Service\Security\SessionValidator;
 
 class DeleteFriendHandler
 {
     public function __construct(
         private FriendRepositoryInterface $friendRepository,
+        private SessionValidator $sessionValidator,
         private UserRepositoryInterface $userRepository
     ) {}
 
     public function __invoke(DeleteFriendCommand $command): void
     {
+        ($this->sessionValidator)($command->id, $command->sessionId, $command->verified);
+
         $user = $this->userRepository->findByUsertag(new UserTag($command->usertag));
 
         if (!$user) {
