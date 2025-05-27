@@ -2,8 +2,6 @@
 
 namespace App\Authentication\Infrastructure\Context;
 
-use App\User\Domain\Entity\User;
-use App\Authentication\Domain\Entity\Session;
 use Symfony\Component\HttpFoundation\RequestStack;
 
 class AuthContext
@@ -18,5 +16,10 @@ class AuthContext
     public function getSessionId(): string
     {
         return $this->requestStack->getCurrentRequest()->attributes->get('sessionId');
+    }
+
+    public function isVerified(): bool
+    {
+        return (bool) $this->requestStack->getCurrentRequest()->attributes->get('verified');
     }
 }

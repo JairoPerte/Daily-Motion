@@ -7,6 +7,7 @@ use Firebase\JWT\Key;
 use App\User\Domain\ValueObject\UserId;
 use App\Authentication\Domain\ValueObject\SessionId;
 use App\Authentication\Domain\Security\JwtTokenManagerInterface;
+use App\User\Domain\ValueObject\UserEmail;
 
 class FirebaseJwtTokenManager implements JwtTokenManagerInterface
 {
@@ -15,13 +16,14 @@ class FirebaseJwtTokenManager implements JwtTokenManagerInterface
         private int $ttlSeconds
     ) {}
 
-    public function createToken(UserId $userId, SessionId $sessionId): string
+    public function createToken(UserId $userId, SessionId $sessionId, UserEmail $userEmail): string
     {
         $now = time();
         return JWT::encode(
             [
                 'sub' => $userId->getUuid(),
                 'session_id' => $sessionId->getUuid(),
+                'verified' => $userEmail->isVerified(),
                 "iat" => $now,
                 "exp" => ($now + $this->ttlSeconds)
             ],

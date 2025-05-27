@@ -22,7 +22,9 @@ class SendFriendRequestController extends AbstractController
     ): JsonResponse {
         $command = new SendFrienRequestCommand(
             id: $this->authContext->getUserId(),
-            usertag: $usertag
+            usertag: $usertag,
+            sessionId: $this->authContext->getSessionId(),
+            verified: $this->authContext->isVerified()
         );
 
         ($this->handler)($command);

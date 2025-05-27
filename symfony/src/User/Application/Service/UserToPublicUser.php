@@ -3,11 +3,11 @@
 namespace App\User\Application\Service;
 
 use App\User\Domain\Entity\User;
-use App\User\Domain\ValueObject\UserId;
-use App\User\Domain\Exception\FriendNotFoundException;
-use App\User\Application\UseCase\UserProfile\PublicUser;
-use App\User\Application\UseCase\Common\PublicUserRelation;
 use App\User\Domain\Entity\Friend;
+use App\User\Domain\ValueObject\UserId;
+use App\User\Application\UseCase\Common\PublicUser;
+use App\User\Domain\Exception\FriendNotFoundException;
+use App\User\Application\UseCase\Common\PublicUserRelation;
 
 class UserToPublicUser
 {

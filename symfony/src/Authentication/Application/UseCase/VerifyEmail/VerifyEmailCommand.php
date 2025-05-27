@@ -8,6 +8,7 @@ class VerifyEmailCommand
 {
     public function __construct(
         public readonly string $code,
-        public readonly string $userId
+        public readonly string $userId,
+        public readonly string $sessionId
     ) {}
 }

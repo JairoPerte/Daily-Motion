@@ -1,8 +1,7 @@
 <?php
 
-namespace App\User\Application\UseCase\UserProfile;
+namespace App\User\Application\UseCase\Common;
 
-use DateTimeImmutable;
 use App\User\Application\UseCase\Common\PublicUserRelation;
 use App\User\Domain\ValueObject\UserCreatedAt;
 use App\User\Domain\ValueObject\UserImg;

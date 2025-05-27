@@ -46,7 +46,11 @@ class LogInHandler
                 );
                 $this->sessionRepository->save($session);
                 //$this->sendEmailLogIn->sendLogInEmail($user->getEmail(), $session);
-                $jwt = $this->jwtTokenManager->createToken($user->getId(), $session->getId());
+                $jwt = $this->jwtTokenManager->createToken(
+                    userId: $user->getId(),
+                    sessionId: $session->getId(),
+                    userEmail: $user->getEmail()
+                );
                 return $jwt;
             }
             throw new WrongPasswordException();

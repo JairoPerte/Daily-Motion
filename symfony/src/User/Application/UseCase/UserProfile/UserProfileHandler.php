@@ -5,10 +5,10 @@ namespace App\User\Application\UseCase\UserProfile;
 use App\User\Domain\ValueObject\UserId;
 use App\User\Domain\ValueObject\UserTag;
 use App\User\Application\Service\UserToPublicUser;
+use App\User\Application\UseCase\Common\PublicUser;
 use App\User\Domain\Exception\UserNotFoundException;
-use App\User\Domain\Repository\UserRepositoryInterface;
-use App\User\Application\UseCase\UserProfile\PublicUser;
 use App\User\Domain\Exception\FriendNotFoundException;
+use App\User\Domain\Repository\UserRepositoryInterface;
 use App\User\Domain\Repository\FriendRepositoryInterface;
 
 class UserProfileHandler

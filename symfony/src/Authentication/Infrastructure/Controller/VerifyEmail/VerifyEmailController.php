@@ -2,18 +2,20 @@
 
 namespace App\Authentication\Infrastructure\Controller\VerifyEmail;
 
+use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Authentication\Infrastructure\Context\AuthContext;
+use App\Authentication\Infrastructure\Security\AuthCookieManager;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use App\Authentication\Application\UseCase\VerifyEmail\VerifyEmailCommand;
 use App\Authentication\Application\UseCase\VerifyEmail\VerifyEmailHandler;
-use App\Authentication\Infrastructure\Context\AuthContext;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\Routing\Annotation\Route;
 
 class VerifyEmailController extends AbstractController
 {
     public function __construct(
         private VerifyEmailHandler $handler,
-        private AuthContext $authContext
+        private AuthContext $authContext,
+        private AuthCookieManager $authCookieManager
     ) {}
 
     #[Route(path: "/v1/auth/verify-email/{code}", name: "v1_auth_verify-email", methods: ["POST"])]
@@ -22,11 +24,14 @@ class VerifyEmailController extends AbstractController
     ): JsonResponse {
         $command = new VerifyEmailCommand(
             code: $code,
-            userId: $this->authContext->getUserId()
+            userId: $this->authContext->getUserId(),
+            sessionId: $this->authContext->getSessionId()
         );
 
-        ($this->handler)($command);
+        $jwt = ($this->handler)($command);
 
-        return $this->json(["message" => "Email code is correct"], 204);
+        $response = $this->json(["message" => "Email code is correct"], 204);
+        $this->authCookieManager->setTokenCookie($response, $jwt);
+        return $response;
     }
 }

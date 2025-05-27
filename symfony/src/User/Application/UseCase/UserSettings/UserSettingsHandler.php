@@ -19,7 +19,7 @@ class UserSettingsHandler
 {
     public function __construct(
         private UserRepositoryInterface $userRepository,
-        private PasswordHasher $passwordHasher
+        private PasswordHasher $passwordHasher,
     ) {}
 
     /**

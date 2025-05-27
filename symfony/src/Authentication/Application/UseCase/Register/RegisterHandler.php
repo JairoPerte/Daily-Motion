@@ -59,7 +59,8 @@ class RegisterHandler
 
         $jwt = $this->jwtTokenManager->createToken(
             userId: $user->getId(),
-            sessionId: $session->getId()
+            sessionId: $session->getId(),
+            userEmail: $user->getEmail()
         );
 
         return $jwt;
