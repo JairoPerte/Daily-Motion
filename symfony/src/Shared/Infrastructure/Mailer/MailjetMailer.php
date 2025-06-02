@@ -2,34 +2,52 @@
 
 namespace App\Shared\Infrastructure\Mailer;
 
-use Throwable;
-use DateTimeImmutable;
-use Symfony\Component\Mime\Email;
-use App\User\Domain\ValueObject\UserEmail;
+use Mailjet\Client;
+use Mailjet\Resources;
+use App\User\Domain\Entity\User;
 use App\Authentication\Domain\Entity\Session;
-use Symfony\Component\Mailer\MailerInterface;
 use App\Shared\Domain\Exception\MailException;
 use App\Shared\Domain\Mailer\AppMailerInterface;
 
 class MailjetMailer implements AppMailerInterface
 {
-    public function __construct(private MailerInterface $mailer) {}
+    private Client $client;
+
+    public function __construct(
+        string $apiKey,
+        string $apiSecret,
+        private string $fromEmail,
+        private string $fromName
+    ) {
+        $this->client = new Client($apiKey, $apiSecret, true, ['version' => 'v3.1']);
+    }
 
     /**
      * @throws \App\Shared\Domain\Exception\MailException
      */
-    public function sendEmailCode(UserEmail $userEmail): void
+    public function sendEmailCode(User $user): void
     {
-        try {
-            $email = (new Email())
-                ->from('daily.motion.app.contact@gmail.com')
-                ->to($userEmail->getString())
-                ->subject('Welcome!')
-                ->text('Welcome to our app!')
-                ->html("<p>{$userEmail->getEmailCode()}</p>");
+        $body = [
+            'Messages' => [
+                [
+                    'From' => [
+                        'Email' => $this->fromEmail,
+                        'Name'  => $this->fromName
+                    ],
+                    'To' => [
+                        [
+                            'Email' => $user->getEmail()->getString(),
+                            'Name'  => $user->getUserName()->getString()
+                        ]
+                    ],
+                    'Subject'  => "Tu código de verificación",
+                    'HTMLPart' => "<h3>Hola {$user->getUserName()->getString()}</h3><p>Tu código de verificación es: <strong>{$user->getEmail()->getEmailCode()}</strong></p><p>Si no has solicitado este código, ignora este mensaje.</p>",
+                ]
+            ]
+        ];
 
-            $this->mailer->send($email);
-        } catch (Throwable $e) {
+        $response = $this->client->post(Resources::$Email, ['body' => $body]);
+        if (!$response->success()) {
             throw new MailException("Ha habido un error al enviar el mail");
         }
     }
@@ -37,19 +55,29 @@ class MailjetMailer implements AppMailerInterface
     /**
      * @throws \App\Shared\Domain\Exception\MailException
      */
-    public function sendLogInEmail(UserEmail $userEmail, Session $session): void
+    public function sendLogInEmail(User $user, Session $session): void
     {
-        try {
-            $now = new DateTimeImmutable();
-            $email = (new Email())
-                ->from('daily.motion.app.contact@gmail.com')
-                ->to($userEmail->getString())
-                ->subject('A new Login From Your Account')
-                ->text('There is a new Login in your account')
-                ->html("<p>Login at: {$now->format('Y-m-d H:i:s')}</p><p>Device: {$session->getSessionUserAgent()->getString()}</p>");
+        $body = [
+            'Messages' => [
+                [
+                    'From' => [
+                        'Email' => $this->fromEmail,
+                        'Name'  => $this->fromName
+                    ],
+                    'To' => [
+                        [
+                            'Email' => $user->getEmail()->getString(),
+                            'Name'  => $user->getUserName()->getString()
+                        ]
+                    ],
+                    'Subject'  => "Un nuevo inicio de sesión en tu cuenta",
+                    'HTMLPart' => "<h3>Hola {$user->getUserName()->getString()}</h3><p>Se ha iniciado sesión en tu cuenta desde un nuevo dispositivo.</p><h2>Detalles de la sesión:</h2><p>Fecha y hora: {$session->getSessionTimeStamp()->getCreatedAt()->format('Y-m-d H:i:s')}</p><p>Dispositivo: {$session->getSessionUserAgent()->getString()}</p>",
+                ]
+            ]
+        ];
 
-            $this->mailer->send($email);
-        } catch (Throwable $e) {
+        $response = $this->client->post(Resources::$Email, ['body' => $body]);
+        if (!$response->success()) {
             throw new MailException("Ha habido un error al enviar el mail");
         }
     }
@@ -57,19 +85,29 @@ class MailjetMailer implements AppMailerInterface
     /**
      * @throws \App\Shared\Domain\Exception\MailException
      */
-    public function sendFriendRequest(UserEmail $userEmail): void
+    public function sendFriendRequest(User $user): void
     {
-        try {
-            $now = new DateTimeImmutable();
-            $email = (new Email())
-                ->from('daily.motion.app.contact@gmail.com')
-                ->to($userEmail->getString())
-                ->subject('You have a new Friend Request')
-                ->text('There is a new Friend Request')
-                ->html("<p>You have a new Friend Request accept it or deny it</p>");
+        $body = [
+            'Messages' => [
+                [
+                    'From' => [
+                        'Email' => $this->fromEmail,
+                        'Name'  => $this->fromName
+                    ],
+                    'To' => [
+                        [
+                            'Email' => $user->getEmail()->getString(),
+                            'Name'  => $user->getUserName()->getString()
+                        ]
+                    ],
+                    'Subject'  => "Has recibido una nueva solicitud de amistad",
+                    'HTMLPart' => "<h3>Hola {$user->getUserName()->getString()}</h3><p>Tienes una nueva solicitud de amistad. Acepta o rechaza la solicitud desde tu perfil.</p>",
+                ]
+            ]
+        ];
 
-            $this->mailer->send($email);
-        } catch (Throwable $e) {
+        $response = $this->client->post(Resources::$Email, ['body' => $body]);
+        if (!$response->success()) {
             throw new MailException("Ha habido un error al enviar el mail");
         }
     }

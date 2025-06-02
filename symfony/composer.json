@@ -12,6 +12,7 @@
     "doctrine/doctrine-migrations-bundle": "^3.4.1",
     "doctrine/orm": "^3.3.2",
     "firebase/php-jwt": "^6.11",
+    "mailjet/mailjet-apiv3-php": "^1.6",
     "nelmio/cors-bundle": "^2.5",
     "phpdocumentor/reflection-docblock": "^5.6.2",
     "phpstan/phpdoc-parser": "^2.1",

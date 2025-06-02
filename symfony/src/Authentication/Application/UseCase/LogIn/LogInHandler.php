@@ -45,7 +45,7 @@ class LogInHandler
                     sessionUserAgent: new SessionUserAgent($command->userAgent)
                 );
                 $this->sessionRepository->save($session);
-                //$this->sendEmailLogIn->sendLogInEmail($user->getEmail(), $session);
+                $this->sendEmailLogIn->sendLogInEmail($user, $session);
                 $jwt = $this->jwtTokenManager->createToken(
                     userId: $user->getId(),
                     sessionId: $session->getId(),

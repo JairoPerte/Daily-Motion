@@ -3,6 +3,7 @@
 namespace App\Authentication\Application\Service\Email;
 
 use App\Shared\Domain\Mailer\AppMailerInterface;
+use App\User\Domain\Entity\User;
 use App\User\Domain\ValueObject\UserEmail;
 
 class SendEmailVerification
@@ -11,10 +12,12 @@ class SendEmailVerification
         private AppMailerInterface $mailer
     ) {}
 
-    public function sendEmailValidate(UserEmail $userEmail): void
+    public function sendEmailValidate(User $user): void
     {
-        if (!$userEmail->isVerified()) {
-            $this->mailer->sendEmailCode($userEmail);
+        if (!$user->getEmail()->isVerified()) {
+            $this->mailer->sendEmailCode(
+                user: $user
+            );
         }
     }
 }

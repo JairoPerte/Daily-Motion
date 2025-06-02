@@ -39,7 +39,7 @@ class SendFriendRequestHandler
             receiverId: $user->getId()
         );
 
-        $this->sendFriendRequestEmail->sendFriendRequest($user->getEmail());
+        $this->sendFriendRequestEmail->sendFriendRequest($user);
 
         $this->friendRepository->save($friend);
     }

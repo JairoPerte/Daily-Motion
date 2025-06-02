@@ -40,14 +40,14 @@ class RegisterHandler
             password: new UserPassword($command->password)
         );
 
-        $user->getPassword()->setHash($this->passwordHasher->hashPassword($user->getPassword()->getString()));
+        $user->getPassword()->setHash(hash: $this->passwordHasher->hashPassword($user->getPassword()->getString()));
 
         $usersWithSameFields = $this->userRepository->findUsersWith($command->email, $command->usertag);
         ($this->throwExceptionForExistingFields)($usersWithSameFields, $command->usertag, $command->email);
 
         $this->userRepository->save($user);
 
-        //$this->sendEmailVerification->sendEmailValidate($user->getEmail());
+        $this->sendEmailVerification->sendEmailValidate($user);
 
         $session = Session::create(
             sessionId: new SessionId($this->uuidGenerator->generate()),

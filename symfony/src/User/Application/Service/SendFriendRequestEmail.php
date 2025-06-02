@@ -4,6 +4,7 @@ namespace App\User\Application\Service;
 
 use App\User\Domain\ValueObject\UserEmail;
 use App\Shared\Domain\Mailer\AppMailerInterface;
+use App\User\Domain\Entity\User;
 
 class SendFriendRequestEmail
 {
@@ -11,11 +12,11 @@ class SendFriendRequestEmail
         private AppMailerInterface $mailer
     ) {}
 
-    public function sendFriendRequest(UserEmail $userEmail): void
+    public function sendFriendRequest(User $user): void
     {
-        if (!$userEmail->isVerified()) {
+        if (!$user->getEmail()->isVerified()) {
             $this->mailer->sendFriendRequest(
-                userEmail: $userEmail
+                user: $user
             );
         }
     }
