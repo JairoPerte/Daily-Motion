@@ -3,10 +3,6 @@
 namespace App\User\Application\UseCase\GetUserLogged;
 
 use App\Authentication\Application\Service\Security\SessionValidator;
-use App\Authentication\Domain\Exception\EmailNotVerifiedException;
-use App\Authentication\Domain\Exception\SessionClosedException;
-use App\Authentication\Domain\Repository\SessionRepositoryInterface;
-use App\Authentication\Domain\ValueObject\SessionId;
 use App\User\Domain\Entity\User;
 use App\User\Domain\Repository\UserRepositoryInterface;
 use App\User\Domain\ValueObject\UserId;
