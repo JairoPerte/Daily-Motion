@@ -8,9 +8,8 @@ export default function Home() {
         <div className="left-section">
           <h1>¡Bienvenido a Daily Motion!</h1>
           <p>Registra todas tus actividades y lleva un control completo.</p>
-          <div className="auth-links">
+          {/* <div className="auth-links">
             {" "}
-            {/* This div is for the text links */}
             <p>
               ¿No tienes cuenta? <a href="/register">Regístrate aquí.</a>
             </p>
@@ -18,7 +17,7 @@ export default function Home() {
               ¿Ya tenías una cuenta anteriormente?{" "}
               <a href="/login">Inicia Sesión aquí.</a>
             </p>
-          </div>
+          </div> */}
           {/* This div is for the buttons */}
           <div className="auth-buttons">
             <a href="/register" className="btn primary-btn">
@@ -33,11 +32,11 @@ export default function Home() {
         <div className="right-section">
           <div className="single-collage-image-container">
             <Image
-              src="/landingpage/collage.png" // Ruta a tu imagen única del collage
+              src="/landingpage/collage.png"
               alt="Collage de Actividades"
-              layout="fill" // Ocupará el espacio disponible del contenedor
-              objectFit="cover" // Cubrirá el área sin distorsionar
-              priority // Optional: if this image is above the fold
+              layout="fill"
+              objectFit="cover"
+              priority
             />
           </div>
         </div>

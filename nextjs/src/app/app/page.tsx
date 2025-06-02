@@ -1,5 +1,6 @@
 "use client";
+import TimerActivity from "@/presentation/components/logic/timer/TimerActivity";
 
-export default function LoginPage() {
-  return <h1>Esta es la página principal</h1>;
+export default function AppPage() {
+  return <TimerActivity />;
 }
