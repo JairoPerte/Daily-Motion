@@ -31,7 +31,8 @@ class CreateActivityController extends AbstractController
 
         $activity = ($this->handler)($command);
 
-        $response = new CreateActivityRequest(
+        $response = new CreateActivityResponse(
+            id: $activity->getActivityId()->getUuid(),
             categoryId: $activity->getActivityId()->getUuid(),
             name: $activity->getActivityName()->getString(),
             startedAt: $activity->getActivityTimeStamps()->getStartedAt(),

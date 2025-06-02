@@ -5,6 +5,7 @@ namespace App\User\Infrastructure\Controller\GetUserLogged;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Authentication\Infrastructure\Context\AuthContext;
+use App\Authentication\Infrastructure\Security\AuthCookieManager;
 use App\User\Application\UseCase\GetUserLogged\GetUserLoggedCommand;
 use App\User\Application\UseCase\GetUserLogged\GetUserLoggedHandler;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -13,10 +14,11 @@ class GetUserLoggedController extends AbstractController
 {
     public function __construct(
         private AuthContext $authContext,
-        private GetUserLoggedHandler $handler
+        private GetUserLoggedHandler $handler,
+        private AuthCookieManager $authCookieManager
     ) {}
 
-    #[Route(path: "/v1/auth/verify-user", name: "v1_auth_verify-user", methods: ["POST"])]
+    #[Route(path: "/v1/auth/verify-user", name: "v1_auth_verify-user", methods: ["GET"])]
     public function index(): JsonResponse
     {
         $command = new GetUserLoggedCommand(

@@ -36,8 +36,8 @@ class ListCategoryPaginatedController extends AbstractController
             fn(Category $category): ListCategoryPaginatedResponse =>
             new ListCategoryPaginatedResponse(
                 id: $category->getId()->getUuid(),
-                iconNumber: $category->getUserId()->getUuid(),
-                name: $category->getIconNumber()->getInteger(),
+                iconNumber: $category->getIconNumber()->getInteger(),
+                name: $category->getName()->getString(),
             ),
             $categories
         );

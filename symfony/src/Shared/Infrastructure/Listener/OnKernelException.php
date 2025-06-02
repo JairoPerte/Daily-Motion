@@ -3,6 +3,7 @@
 namespace App\Shared\Infrastructure\Listener;
 
 use App\Authentication\Domain\Exception\JwtNotValidException;
+use App\Authentication\Domain\Exception\SessionClosedException;
 use App\Shared\Domain\Exception\DailyMotionException;
 use Throwable;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -34,9 +35,9 @@ class OnKernelException
             $this->getCode($throwable)
         );
 
-        // Extra que se quiera hacer con las respuestas
-        if ($throwable instanceof JwtNotValidException) {
-            $this->authCookieManager->clearTokenCookie($exception->getResponse());
+        // Extra que se quiera hacer con las respuestas (limpiar la cookie p.e)
+        if ($throwable instanceof JwtNotValidException || $throwable instanceof SessionClosedException) {
+            $this->authCookieManager->clearTokenCookie($response);
         }
 
         $exception->setResponse($response);

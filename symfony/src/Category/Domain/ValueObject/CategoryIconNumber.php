@@ -9,7 +9,7 @@ class CategoryIconNumber
     public function __construct(
         private int $iconNumber
     ) {
-        if ($iconNumber < 0) {
+        if ($iconNumber <= 0 || $iconNumber >= 7) {
             throw new CategoryIconNotExistException();
         }
     }

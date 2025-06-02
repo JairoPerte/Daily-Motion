@@ -7,6 +7,7 @@ use DateTimeImmutable;
 class CreateActivityResponse
 {
     public function __construct(
+        public readonly string $id,
         public readonly string $categoryId,
         public readonly string $name,
         public readonly DateTimeImmutable $startedAt,
