@@ -27,12 +27,10 @@ class UserProfileHandler
             throw new UserNotFoundException();
         }
 
-        $friend = $this->friendRepository->findByUsersId($user->getId(), new UserId($command->visitorId));
+        $visitorId = new UserId($command->visitorId);
 
-        if (!$friend) {
-            throw new FriendNotFoundException();
-        }
+        $friend = $this->friendRepository->findByUsersId($user->getId(), $visitorId);
 
-        return ($this->userToPublicUser)($friend, $user, $command->visitorId);
+        return ($this->userToPublicUser)($friend, $user, $visitorId);
     }
 }

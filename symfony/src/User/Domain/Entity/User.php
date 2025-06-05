@@ -75,15 +75,23 @@ class User
     }
 
     public function update(
-        UserName $userName,
-        UserTag $userTag,
-        UserPassword $password,
-        UserImg $img,
+        ?UserName $userName,
+        ?UserTag $userTag,
+        ?UserPassword $password,
+        ?UserImg $img,
     ): void {
-        $this->userName = $userName;
-        $this->password = $password;
-        $this->userTag = $userTag;
-        $this->img = $img;
+        if ($userName) {
+            $this->userName = $userName;
+        }
+        if ($userTag) {
+            $this->userTag = $userTag;
+        }
+        if ($img) {
+            $this->img = $img;
+        }
+        if ($password) {
+            $this->password = $password;
+        }
     }
 
     public function getId(): UserId

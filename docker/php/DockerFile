@@ -16,25 +16,20 @@ RUN apt-get update \
     libpq-dev \
     zlib1g-dev \
     libzip-dev \
+    libpng-dev \
+    libjpeg-dev \
+    libwebp-dev \
+    && docker-php-ext-configure gd --with-jpeg --with-webp \
     && docker-php-ext-install \
     intl \
     pdo \
     pdo_pgsql \
     zip \
     bcmath \
+    gd \
     && docker-php-ext-enable opcache \
     && apt-get clean \
     && rm -rf /var/lib/apt/lists/*
-
-# RUN apt-get update \
-#     && apt-get install -y git acl openssl openssh-client wget zip vim iputils-ping tesseract-ocr tesseract-ocr-spa libtesseract-dev \
-#     && apt-get install -y libmagickwand-dev libpng-dev libjpeg-dev zlib1g-dev libzip-dev libxml2-dev libicu-dev libpq-dev librabbitmq-dev libssh-dev \
-#     && docker-php-ext-configure gd --enable-gd --with-jpeg \
-#     && docker-php-ext-install intl pdo pdo_pgsql zip gd soap bcmath sockets sysvsem \
-#     && pecl install xdebug \
-#     && pecl install amqp-1.11.0 \
-#     && pecl install imagick \
-#     && docker-php-ext-enable --ini-name 05-opcache.ini opcache xdebug amqp imagick
 
 # Instalar dependencias PHP con el composer
 RUN curl https://getcomposer.org/composer.phar -o /usr/bin/composer && chmod +x /usr/bin/composer
@@ -42,6 +37,12 @@ RUN composer self-update
 
 # Preparamos el espacio donde trabajaremos
 RUN mkdir -p /appdata/www
+
+RUN mkdir -p /appdata/uploads \
+    && chown -R www-data:www-data /appdata/uploads \
+    && chmod -R 777 /appdata/uploads
+
+USER www-data
 
 WORKDIR /appdata/www
 
