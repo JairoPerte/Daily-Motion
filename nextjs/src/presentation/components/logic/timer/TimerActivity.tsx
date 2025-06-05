@@ -94,7 +94,7 @@ export default function TimerActivity() {
   const isValidInput = inputValue.length > 0 && inputValue.length <= MAX_CHARS;
 
   return (
-    <div className="min-h-screen p-6 flex flex-col items-center justify-start relative overflow-hidden">
+    <div className="p-6 flex flex-col items-center justify-start relative overflow-visible">
       <CategoryModal
         isOpen={openDialog}
         onClose={() => setOpenDialog(false)}
