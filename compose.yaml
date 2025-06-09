@@ -13,6 +13,7 @@ services:
       - "5432:5432"
     volumes:
       - database_data:/var/lib/postgresql/data
+      - ./docker/database/init-timezone.sql:/docker-entrypoint-initdb.d/init-timezone.sql
     networks:
       - database
 
@@ -59,7 +60,7 @@ services:
       [
         "/bin/sh",
         "-c",
-        "mkdir -p /usr/share/nginx/html/public/profile && chmod -R 777 /usr/share/nginx/html/public/profile && nginx -g 'daemon off;'",
+        "mkdir -p /usr/share/nginx/html/public/profile && chmod -R 775 /usr/share/nginx/html/public/profile && nginx -g 'daemon off;'",
       ]
     networks:
       - proxy
@@ -80,6 +81,13 @@ services:
     volumes:
       - ./symfony:/appdata/www
       - uploads_data:/appdata/uploads:rw
+    command: >
+      sh -c "
+        mkdir -p /appdata/www/var/cache &&
+        chown -R www-data:www-data /appdata/www/var &&
+        chmod -R 775 /appdata/www/var &&
+        php-fpm -F -R
+      "
     depends_on:
       - api
       - database

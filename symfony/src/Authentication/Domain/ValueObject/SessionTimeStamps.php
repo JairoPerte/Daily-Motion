@@ -2,6 +2,7 @@
 
 namespace App\Authentication\Domain\ValueObject;
 
+use DateTimeZone;
 use DateTimeImmutable;
 
 class SessionTimeStamps
@@ -13,12 +14,12 @@ class SessionTimeStamps
 
     public function isExpired(): bool
     {
-        return $this->expiresAt < new DateTimeImmutable();
+        return $this->expiresAt < new DateTimeImmutable("now", new DateTimeZone('Europe/Madrid'));
     }
 
     public static function newSession(): self
     {
-        $now = new DateTimeImmutable();
+        $now = new DateTimeImmutable("now", new DateTimeZone('Europe/Madrid'));
         return new self(
             createdAt: $now,
             expiresAt: $now->modify("+30 days")

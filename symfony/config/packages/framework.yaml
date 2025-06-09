@@ -5,6 +5,10 @@ framework:
     # Note that the session will be started ONLY if you read or write from it.
     session: true
 
+    serializer:
+        default_context:
+            datetime_timezone: 'Europe/Madrid'
+
     #esi: true
     #fragments: true
 

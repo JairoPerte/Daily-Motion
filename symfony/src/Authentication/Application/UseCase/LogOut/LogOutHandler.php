@@ -13,7 +13,6 @@ class LogOutHandler
 
     public function __invoke(LogOutCommand $command): void
     {
-        $session = $this->sessionRepository->findById(new SessionId($command->sessionId));
-        $this->sessionRepository->delete($session);
+        $this->sessionRepository->delete(new SessionId($command->sessionId));
     }
 }

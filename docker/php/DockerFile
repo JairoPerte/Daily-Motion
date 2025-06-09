@@ -40,9 +40,11 @@ RUN mkdir -p /appdata/www
 
 RUN mkdir -p /appdata/uploads \
     && chown -R www-data:www-data /appdata/uploads \
-    && chmod -R 777 /appdata/uploads
+    && chmod -R 775 /appdata/uploads
 
-USER www-data
+RUN mkdir -p /appdata/www/var \
+    && chown -R www-data:www-data /appdata/www/var \
+    && chmod -R 775 /appdata/www/var
 
 WORKDIR /appdata/www
 

@@ -4,6 +4,9 @@ namespace App\Shared\Infrastructure\Listener;
 
 use App\Authentication\Domain\Exception\JwtNotValidException;
 use App\Authentication\Domain\Exception\SessionClosedException;
+use App\Authentication\Domain\Repository\SessionRepositoryInterface;
+use App\Authentication\Domain\ValueObject\SessionId;
+use App\Authentication\Infrastructure\Context\AuthContext;
 use App\Shared\Domain\Exception\DailyMotionException;
 use Throwable;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -13,7 +16,9 @@ use App\Authentication\Infrastructure\Security\AuthCookieManager;
 class OnKernelException
 {
     public function __construct(
-        private AuthCookieManager $authCookieManager
+        private AuthCookieManager $authCookieManager,
+        private SessionRepositoryInterface $sessionRepositoryInterface,
+        private AuthContext $authContext
     ) {}
 
     public function onKernelException(ExceptionEvent $exception): void
@@ -38,6 +43,7 @@ class OnKernelException
         // Extra que se quiera hacer con las respuestas (limpiar la cookie p.e)
         if ($throwable instanceof JwtNotValidException || $throwable instanceof SessionClosedException) {
             $this->authCookieManager->clearTokenCookie($response);
+            $this->sessionRepositoryInterface->delete(new SessionId($this->authContext->getSessionId()));
         }
 
         $exception->setResponse($response);

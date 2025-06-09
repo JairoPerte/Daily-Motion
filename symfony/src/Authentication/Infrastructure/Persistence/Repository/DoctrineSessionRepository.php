@@ -2,6 +2,9 @@
 
 namespace App\Authentication\Infrastructure\Persistence\Repository;
 
+use DateTimeZone;
+use DateTimeImmutable;
+use App\User\Domain\ValueObject\UserId;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Authentication\Domain\Entity\Session;
 use App\Authentication\Domain\ValueObject\SessionId;
@@ -16,9 +19,9 @@ class DoctrineSessionRepository implements SessionRepositoryInterface
         private SessionMapper $mapper
     ) {}
 
-    public function delete(Session $session): void
+    public function delete(SessionId $sessionId): void
     {
-        $doctrineSession = $this->em->getRepository(DoctrineSession::class)->find($session->getId()->getUuid());
+        $doctrineSession = $this->em->getRepository(DoctrineSession::class)->find($sessionId->getUuid());
         if ($doctrineSession) {
             $this->em->remove($doctrineSession);
             $this->em->flush();
@@ -58,15 +61,17 @@ class DoctrineSessionRepository implements SessionRepositoryInterface
     /**
      * @return Session[]
      */
-    public function findAllSessionActive(): array
+    public function findAllSessionActive(UserId $userId): array
     {
-        $now = new \DateTimeImmutable();
+        $now = new DateTimeImmutable("now", new DateTimeZone('Europe/Madrid'));
 
         $doctrineSessions = $this->em
             ->getRepository(DoctrineSession::class)
             ->createQueryBuilder('s')
-            ->where('s.expiresAt < :now')
+            ->where('s.expiresAt > :now')
             ->andWhere('s.revoked = false')
+            ->andWhere('s.userId = :userId')
+            ->setParameter('userId', $userId->getUuid())
             ->setParameter('now', $now)
             ->getQuery()
             ->getResult();

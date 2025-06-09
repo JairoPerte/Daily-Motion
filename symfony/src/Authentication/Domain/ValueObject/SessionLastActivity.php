@@ -2,6 +2,7 @@
 
 namespace App\Authentication\Domain\ValueObject;
 
+use DateTimeZone;
 use DateTimeImmutable;
 
 class SessionLastActivity
@@ -17,11 +18,11 @@ class SessionLastActivity
 
     public function hasConnected(): void
     {
-        $this->lastActivity = new DateTimeImmutable();
+        $this->lastActivity = new DateTimeImmutable("now", new DateTimeZone('Europe/Madrid'));
     }
 
     public static function newSession(): self
     {
-        return new self(new DateTimeImmutable());
+        return new self(new DateTimeImmutable("now", new DateTimeZone('Europe/Madrid')));
     }
 }

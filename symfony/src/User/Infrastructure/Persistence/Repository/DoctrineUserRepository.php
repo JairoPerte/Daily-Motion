@@ -70,17 +70,10 @@ class DoctrineUserRepository implements UserRepositoryInterface
             ->getRepository(DoctrineUser::class)
             ->createQueryBuilder('u')
             ->select('u')
-            ->addSelect('(
-                    SELECT COUNT(f)
-                    FROM ' . DoctrineUser::class . ' f
-                    WHERE (f.senderId = u.id OR f.receiverId = u.id)
-                    AND f.pending = false
-                ) AS HIDDEN friendsCount
-            ')
             ->where('u.usertag LIKE :search')
             ->orWhere('u.name LIKE :search')
+            ->andWhere('u.emailVerified = true')
             ->setParameter('search', '%' . $search . '%')
-            ->orderBy('friendsCount', 'DESC')
             ->setMaxResults($limit)
             ->setFirstResult(($page - 1) * $limit)
             ->getQuery()

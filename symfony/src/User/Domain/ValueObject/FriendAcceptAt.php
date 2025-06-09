@@ -2,6 +2,7 @@
 
 namespace App\User\Domain\ValueObject;
 
+use DateTimeZone;
 use DateTimeImmutable;
 
 class FriendAcceptAt
@@ -12,7 +13,7 @@ class FriendAcceptAt
 
     public static function acceptFriendRequest(): self
     {
-        return new self(new DateTimeImmutable());
+        return new self(new DateTimeImmutable("now", new DateTimeZone('Europe/Madrid')));
     }
 
     public function getDateTimeImmutable(): DateTimeImmutable

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\User\Application\UseCase\GetUserLogged;
+namespace App\Authentication\Application\UseCase\GetUserLogged;
 
 use App\Authentication\Application\Service\Security\SessionValidator;
 use App\User\Domain\Entity\User;

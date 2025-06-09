@@ -31,7 +31,7 @@ final class Version20250511203709 extends AbstractMigration
                 email_verified_at TIMESTAMP(0) WITH TIME ZONE NULL, 
                 img VARCHAR(255) NOT NULL, 
                 created_at TIMESTAMP(0) WITH TIME ZONE NOT NULL, 
-                email_code VARCHAR(10) NOT NULL, 
+                email_code VARCHAR(10) NULL, 
                 PRIMARY KEY(id)
             )
         SQL);

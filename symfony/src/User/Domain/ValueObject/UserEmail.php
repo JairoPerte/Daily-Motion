@@ -2,8 +2,9 @@
 
 namespace App\User\Domain\ValueObject;
 
-use App\Shared\Domain\Exception\LogicDailyMotionException;
+use DateTimeZone;
 use DateTimeImmutable;
+use App\Shared\Domain\Exception\LogicDailyMotionException;
 use App\User\Domain\Exception\EmailCodeNotValidatedException;
 
 class UserEmail
@@ -12,7 +13,7 @@ class UserEmail
         private readonly string $email,
         private bool $verified,
         private ?DateTimeImmutable $verifiedAt,
-        private string $emailCode
+        private ?string $emailCode
     ) {
         if ($this->verified && $this->verifiedAt === null) {
             throw new LogicDailyMotionException("There is no verified at but he is verified, Bad Account");
@@ -57,7 +58,8 @@ class UserEmail
     public function verify(): void
     {
         $this->verified = true;
-        $this->verifiedAt = new DateTimeImmutable();
+        $this->emailCode = null;
+        $this->verifiedAt = new DateTimeImmutable("now", new DateTimeZone('Europe/Madrid'));
     }
 
     public static function fromExistingAccount(string $email, bool $verified, DateTimeImmutable $verifiedAt, string $emailCode): self

@@ -28,17 +28,17 @@ class SessionMapper
     public function toInfrastructure(Session $session, ?DoctrineSession $doctrineSession): DoctrineSession
     {
         if (!$doctrineSession) {
-            $doctrineSesion = new DoctrineSession();
+            $doctrineSession = new DoctrineSession();
         }
 
-        $doctrineSesion->id = $session->getId()->getUuid();
-        $doctrineSesion->userId = $session->getUserId()->getUuid();
-        $doctrineSesion->createdAt = $session->getSessionTimeStamp()->getCreatedAt();
-        $doctrineSesion->expiresAt = $session->getSessionTimeStamp()->getExpiresAt();
-        $doctrineSesion->lastActivity = $session->getSessionLastActivity()->getDateTimeImmutable();
-        $doctrineSesion->userAgent = $session->getSessionUserAgent()->getString();
-        $doctrineSesion->revoked = $session->getSessionRevoked()->isRevoked();
+        $doctrineSession->id = $session->getId()->getUuid();
+        $doctrineSession->userId = $session->getUserId()->getUuid();
+        $doctrineSession->createdAt = $session->getSessionTimeStamp()->getCreatedAt();
+        $doctrineSession->expiresAt = $session->getSessionTimeStamp()->getExpiresAt();
+        $doctrineSession->lastActivity = $session->getSessionLastActivity()->getDateTimeImmutable();
+        $doctrineSession->userAgent = $session->getSessionUserAgent()->getString();
+        $doctrineSession->revoked = $session->getSessionRevoked()->isRevoked();
 
-        return $doctrineSesion;
+        return $doctrineSession;
     }
 }

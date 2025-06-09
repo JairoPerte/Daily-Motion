@@ -17,7 +17,7 @@ class FriendsToUserFriendsPublic
     {
         $relation = PublicUserRelation::STRANGERS;
 
-        if ($user->getId() == $visitorId) {
+        if ($user->getId()->getUuid() == $visitorId) {
             $relation = PublicUserRelation::YOURSELF;
         }
 

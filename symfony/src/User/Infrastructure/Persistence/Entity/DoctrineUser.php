@@ -39,5 +39,5 @@ class DoctrineUser
     public DateTimeImmutable $createdAt;
 
     #[ORM\Column(type: Types::STRING, name: "email_code")]
-    public string $emailCode;
+    public ?string $emailCode;
 }

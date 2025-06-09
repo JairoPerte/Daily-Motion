@@ -2,6 +2,7 @@
 
 namespace App\User\Domain\ValueObject;
 
+use DateTimeZone;
 use DateTimeImmutable;
 
 class UserCreatedAt
@@ -17,6 +18,6 @@ class UserCreatedAt
 
     public static function newUser(): self
     {
-        return new self(new DateTimeImmutable());
+        return new self(new DateTimeImmutable("now", new DateTimeZone('Europe/Madrid')));
     }
 }

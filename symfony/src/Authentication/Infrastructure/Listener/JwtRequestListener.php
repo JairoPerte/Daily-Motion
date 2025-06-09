@@ -16,6 +16,8 @@ class JwtRequestListener
 
     public function onKernelRequest(RequestEvent $event): void
     {
+        date_default_timezone_set('Europe/Madrid');
+
         $request = $event->getRequest();
 
         $path = $request->getPathInfo();

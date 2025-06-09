@@ -1,12 +1,11 @@
 <?php
 
-namespace App\User\Application\UseCase\GetUserLogged;
+namespace App\Authentication\Application\UseCase\Sessions\GetSessionsList;
 
-class GetUserLoggedCommand
+class GetSessionsListCommand
 {
     public function __construct(
         public readonly string $userId,
-        public readonly bool $verified,
         public readonly string $sessionId
     ) {}
 }

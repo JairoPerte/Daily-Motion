@@ -1,0 +1,1 @@
+ALTER DATABASE daily_motion SET TIME ZONE 'Europe/Madrid';

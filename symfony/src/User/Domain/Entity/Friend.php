@@ -6,7 +6,6 @@ use App\User\Domain\ValueObject\FriendAcceptAt;
 use App\User\Domain\ValueObject\FriendId;
 use App\User\Domain\ValueObject\FriendPending;
 use App\User\Domain\ValueObject\UserId;
-use DateTimeImmutable;
 
 class Friend
 {
