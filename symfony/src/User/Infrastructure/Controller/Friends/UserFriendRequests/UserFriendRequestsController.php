@@ -35,6 +35,6 @@ class UserFriendRequestsController extends AbstractController
             $users
         );
 
-        return $this->json(["users" => $users], 200);
+        return $this->json($users, 200);
     }
 }

@@ -43,6 +43,9 @@ class DoctrineFriendWithUserRepository implements FriendWithUserRepositoryInterf
             ->getResult();
 
         if ($doctrineFriendsUsers) {
+            if ($doctrineFriendsUsers[0] instanceof DoctrineFriend) {
+                return [$this->mapper->toDomain($doctrineFriendsUsers)];
+            }
             return array_map(
                 fn(array $doctrineFriendUser): FriendWithUser => $this->mapper->toDomain($doctrineFriendUser),
                 $doctrineFriendsUsers

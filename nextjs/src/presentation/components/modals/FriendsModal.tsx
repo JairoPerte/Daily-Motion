@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import {
   getFriends,
   getFriendsRequests,
@@ -33,6 +33,7 @@ export default function FriendsModal({
   const [isLoading, setIsLoading] = useState(false);
 
   const router = useRouter();
+  const observerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (isOpen) {
@@ -59,9 +60,12 @@ export default function FriendsModal({
     setIsLoading(true);
     getFriends(usertag, page, 30)
       .then((data) => {
-        setFriends((prev) => [...prev, ...data.friends]);
+        const newFriends = data.friends.filter(
+          (newF) => !friends.some((f) => f.usertag === newF.usertag)
+        );
+        setFriends((prev) => [...prev, ...newFriends]);
         setRelation(data.publicUserRelation);
-        if (data.friends.length === 0) {
+        if (newFriends.length === 0 || data.friends.length === 0) {
           setHasMore(false);
         }
       })
@@ -80,6 +84,25 @@ export default function FriendsModal({
     }
   }, [relation]);
 
+  useEffect(() => {
+    if (!observerRef.current || !hasMore || isLoading) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setPage((prev) => prev + 1);
+        }
+      },
+      {
+        rootMargin: "100px",
+      }
+    );
+
+    observer.observe(observerRef.current);
+
+    return () => observer.disconnect();
+  }, [hasMore, isLoading]);
+
   const handleDeleteFriend = async (usertag: string) => {
     const success = await deleteFriend(usertag);
     if (success)
@@ -88,8 +111,21 @@ export default function FriendsModal({
 
   const handleAccept = async (usertag: string) => {
     const success = await acceptFriendRequest(usertag);
-    if (success)
+    if (success) {
       setRequests((prev) => prev.filter((r) => r.usertag !== usertag));
+      const newFriend = requests.find((r) => r.usertag === usertag);
+      if (newFriend) {
+        setFriends((prev) => [
+          {
+            usertag: newFriend.usertag,
+            name: newFriend.name,
+            img: newFriend.img,
+            friendsAcceptedAt: new Date().toISOString(),
+          },
+          ...prev,
+        ]);
+      }
+    }
   };
 
   const handleDecline = async (usertag: string) => {
@@ -206,15 +242,13 @@ export default function FriendsModal({
           ))
         )}
 
-        {hasMore && (
-          <button
-            onClick={() => setPage((prev) => prev + 1)}
-            className="text-sm text-blue-500 hover:underline"
-            disabled={isLoading}
-          >
-            {isLoading ? "Cargando..." : "Cargar más"}
-          </button>
-        )}
+        <div ref={observerRef}>
+          {isLoading && (
+            <p className="text-center text-sm text-blue-500">
+              Cargando amigos...
+            </p>
+          )}
+        </div>
       </div>
     </div>
   );

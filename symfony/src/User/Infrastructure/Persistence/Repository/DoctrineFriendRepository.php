@@ -21,7 +21,7 @@ class DoctrineFriendRepository implements FriendRepositoryInterface
 
     public function save(Friend $friend): void
     {
-        $doctrineFriend = $this->em->getRepository(DoctrineFriend::class)->find($friend->getFriendId());
+        $doctrineFriend = $this->em->getRepository(DoctrineFriend::class)->find($friend->getFriendId()->getUuid());
         $this->em->persist($this->mapper->toInfrastructure($friend, $doctrineFriend));
         $this->em->flush();
     }

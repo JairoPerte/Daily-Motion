@@ -92,7 +92,7 @@ class UserEmail
         return $this->verifiedAt;
     }
 
-    public function getEmailCode(): string
+    public function getEmailCode(): ?string
     {
         return $this->emailCode;
     }
