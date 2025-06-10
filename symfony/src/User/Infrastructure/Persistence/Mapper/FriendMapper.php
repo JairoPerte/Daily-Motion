@@ -21,7 +21,7 @@ class FriendMapper
         $doctrineFriend->senderId = $friend->getSenderId()->getUuid();
         $doctrineFriend->receiverId = $friend->getReceiverId()->getUuid();
         $doctrineFriend->pending = $friend->getFriendPending()->getBool();
-        $doctrineFriend->acceptedAt = $friend->getFriendAcceptAt()->getDateTimeImmutable();
+        $doctrineFriend->acceptedAt = $friend->getFriendAcceptAt()?->getDateTimeImmutable() ?? null;
 
         return $doctrineFriend;
     }
@@ -33,7 +33,7 @@ class FriendMapper
             senderId: new UserId($doctrineFriend->senderId),
             receiverId: new UserId($doctrineFriend->receiverId),
             friendPending: new FriendPending($doctrineFriend->pending),
-            friendAcceptAt: new FriendAcceptAt($doctrineFriend->acceptedAt)
+            friendAcceptAt: $doctrineFriend->acceptedAt ? new FriendAcceptAt($doctrineFriend->acceptedAt) : null
         );
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\User\Infrastructure\Controller\Friends\AcceptFriendRequest;
 
-use Symfony\Component\Routing\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Authentication\Infrastructure\Context\AuthContext;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

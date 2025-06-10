@@ -34,9 +34,8 @@ class AcceptFriendRequestHandler
             throw new FriendNotFoundException();
         }
 
-        $friend->acceptFriendRequest();
-
         if ($friend->getFriendPending()->getBool()) {
+            $friend->acceptFriendRequest();
             $this->friendRepository->save($friend);
         }
     }
