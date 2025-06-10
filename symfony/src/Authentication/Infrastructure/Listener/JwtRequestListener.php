@@ -41,7 +41,7 @@ class JwtRequestListener
         $sessionId = $payload['session_id'] ?? null;
         $verified = $payload['verified'] ?? null;
 
-        if (!$userId || !$sessionId || !$verified) {
+        if (!$userId || !$sessionId || !isset($verified)) {
             throw new JwtNotValidException();
         }
 
