@@ -5,13 +5,20 @@ export interface UserLoggedIn {
   usertag: string;
   img: string;
   email: string;
-  userCreatedAt: string;
+  createdAt: string;
 }
 
 export interface User {
   name: string;
   usertag: string;
   img: string;
-  userCreatedAt: string;
+  createdAt: string;
   relation: UserRelation;
+}
+
+export interface UserWithoutRelation {
+  name: string;
+  usertag: string;
+  img: string;
+  createdAt: string;
 }

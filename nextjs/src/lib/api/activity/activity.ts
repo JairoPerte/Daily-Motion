@@ -23,3 +23,30 @@ export const createActivity = async (
     return null;
   }
 };
+
+export const listActivities = async (
+  startDate: string,
+  period: string,
+  categoryId: string | null,
+  name: string | null
+): Promise<Activity[]> => {
+  try {
+    let urlToFetch = `${process.env.NEXT_PUBLIC_API_URL}/activity/period?period=${period}&startDate=${startDate}`;
+
+    if (categoryId) urlToFetch = urlToFetch + `&categoryId=${categoryId}`;
+    if (name) urlToFetch = urlToFetch + `&name=${name}`;
+
+    const res = await fetch(urlToFetch, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+      body: null,
+    });
+
+    if (!res.ok) throw new Error("Failed to create activity");
+
+    return await res.json();
+  } catch (err) {
+    console.error(err);
+    throw new Error();
+  }
+};

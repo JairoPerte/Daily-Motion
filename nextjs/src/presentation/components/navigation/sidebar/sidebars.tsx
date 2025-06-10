@@ -1,5 +1,5 @@
 import { useRouter } from "next/navigation";
-import { FaHome, FaChartLine, FaTags, FaUsers, FaTimes } from "react-icons/fa";
+import { FaHome, FaChartLine, FaTags, FaTimes } from "react-icons/fa";
 import { useEffect } from "react";
 
 const menuItems = [
@@ -10,7 +10,6 @@ const menuItems = [
     path: "/app/activities",
   },
   { name: "Categorías", icon: <FaTags />, path: "/app/categories" },
-  { name: "Amigos", icon: <FaUsers />, path: "/app/friends" },
 ];
 
 type Props = {
@@ -44,7 +43,7 @@ export default function Sidebar({ sidebarOpen, toggleSidebar }: Props) {
       {/* Sidebar */}
       <aside
         className={`
-    fixed top-16 left-0 h-[calc(100vh-4rem)] w-64 z-50 bg-[#c6f6d5] shadow-lg
+    fixed top-16 left-0 h-[calc(100vh-4rem)] w-64 z-50 bg-[#68d391] shadow-lg
     transform transition-transform duration-300 ease-in-out
     ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
     md:static md:translate-x-0 md:w-64 md:top-0 md:h-auto

@@ -46,11 +46,11 @@ class DoctrineActivityRepository implements ActivityRepositoryInterface
     /**
      * @return Activity[]
      */
-    public function findByActivitiesByPeriodCriteria(ActivityCriteria $criteria, UserId $userId, DateTimeImmutable $date, ActivityPeriodTime $period): array
+    public function findByActivitiesByPeriodCriteria(ActivityCriteria $criteria, UserId $userId, DateTimeImmutable $startDate, ActivityPeriodTime $period): array
     {
-        $startDate = $date->setTime(0, 0, 0);
+        $startDateNew = $startDate->setTime(0, 0, 0);
 
-        $endOfDate = $date->setTime(23, 59, 59);
+        $endOfDate = $startDate->setTime(23, 59, 59);
 
         if ($period->isWeek()) {
             $endOfDate = $endOfDate->modify("+6 days");
@@ -65,18 +65,19 @@ class DoctrineActivityRepository implements ActivityRepositoryInterface
             ->select("a")
             ->where("a.userId = :userId")
             ->andWhere("a.startedAt BETWEEN :startDate AND :endOfDate")
-            ->setParameter("userId", $userId)
-            ->setParameter("startDate", $startDate)
-            ->setParameter("endOfDate", $endOfDate);
+            ->setParameter("userId", $userId->getUuid())
+            ->setParameter("startDate", $startDateNew)
+            ->setParameter("endOfDate", $endOfDate)
+            ->orderBy("a.startedAt", "ASC");
 
         if ($criteria->name) {
-            $queryBuilder->andWhere("name LIKE :name")
+            $queryBuilder->andWhere("a.name LIKE :name")
                 ->setParameter("name", '%' . $criteria->name . '%');
         }
 
         if ($criteria->categoryId) {
-            $queryBuilder->andWhere("categoryId LIKE :categoryId")
-                ->setParameter("categoryId", '%' . $criteria->categoryId . '%');
+            $queryBuilder->andWhere("a.categoryId = :categoryId")
+                ->setParameter("categoryId",  $criteria->categoryId);
         }
 
         $doctrineActivities = $queryBuilder->getQuery()->getResult();
